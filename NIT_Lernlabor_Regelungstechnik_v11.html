@@ -1,0 +1,1439 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NIT Lernlabor Regelungstechnik – V11</title>
+<style>
+:root{
+  --bg:#eef3f7;--surface:#ffffff;--surface2:#f7fafc;--ink:#17212b;--muted:#667487;
+  --teal:#0b8f87;--teal2:#0aa39a;--blue:#2f6feb;--orange:#e38b2c;--red:#d54d4d;
+  --green:#178a58;--border:#d8e1ea;--code:#1f2428;--code2:#242b31;--shadow:0 12px 36px rgba(28,44,64,.09);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#eef4f7 0,#f6f8fb 220px);color:var(--ink)}
+button,input,textarea,select{font:inherit}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.topbarInner{max-width:1480px;margin:auto;padding:12px 22px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;min-width:245px}.brandMark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--teal),#144f84);display:grid;place-items:center;color:white;font-weight:800}.brand b{display:block}.brand small{color:var(--muted)}
+.stageNav{display:flex;gap:7px;overflow:auto;flex:1;padding:3px}.stageBtn{white-space:nowrap;border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 11px;color:#435164;cursor:pointer}.stageBtn.active{background:var(--teal);border-color:var(--teal);color:#fff}.stageBtn.locked{opacity:.42;cursor:not-allowed}.stageBtn.done::before{content:'✓ ';font-weight:800}
+.topActions{display:flex;gap:8px}.iconBtn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 10px;cursor:pointer}
+main{max-width:1480px;margin:auto;padding:24px 22px 60px}
+.hero{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;margin-bottom:18px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--teal);font-size:12px;font-weight:800}.hero h1{font-size:34px;margin:5px 0 6px}.hero p{margin:0;color:var(--muted);max-width:950px;line-height:1.5}.modePill{border:1px solid var(--border);background:#fff;border-radius:14px;padding:10px 13px;color:var(--muted)}
+.progressStrip{background:#fff;border:1px solid var(--border);border-radius:14px;padding:11px 13px;display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;box-shadow:var(--shadow)}.progressItem{font-size:13px;border-radius:999px;padding:6px 9px;background:#eef2f6;color:#607086}.progressItem.done{background:#e7f7f2;color:#126e4e}.progressItem.current{outline:2px solid #b7e7df}
+.grid{display:grid;grid-template-columns:1.06fr .94fr;gap:18px;align-items:start}.stack{display:grid;gap:18px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}.cardHead{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;align-items:center}.cardHead h2{font-size:19px;margin:0}.cardBody{padding:18px}.cardBody p{line-height:1.55}.label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}.challenge{padding:16px 18px;border-left:5px solid var(--teal);background:linear-gradient(90deg,#edf9f8,#f9fcfc);border-radius:12px;line-height:1.55}.everyday{display:grid;grid-template-columns:100px 1fr;gap:16px;align-items:center}.everyIcon{height:92px;border-radius:16px;background:#eaf5f4;display:grid;place-items:center;font-size:43px}.formula{font-family:Cambria Math,Times New Roman,serif;font-size:24px;background:#f6f8fb;border:1px solid var(--border);padding:11px 14px;border-radius:12px;text-align:center;margin:12px 0}.microtask{margin-top:13px;padding:12px 14px;border-radius:12px;background:#fff8e9;border:1px solid #f0d69f}.microtask textarea{margin-top:8px}
+textarea.answer,input.answer{width:100%;border:1px solid #cdd8e4;border-radius:10px;padding:10px;background:#fff;min-height:82px;resize:vertical}.questionRow{display:grid;gap:8px;margin:12px 0}.questionRow label{font-weight:650}.questionRow select,.questionRow input[type=text]{border:1px solid #cdd8e4;border-radius:10px;padding:9px;background:white}
+.predictWrap{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff}.predictTools{display:flex;gap:8px;align-items:center;padding:10px;border-bottom:1px solid var(--border);background:#f7fafc}.predictTools button{border:1px solid var(--border);background:white;border-radius:9px;padding:7px 9px;cursor:pointer}.predictTools small{margin-left:auto;color:var(--muted)}canvas{display:block;width:100%;height:auto}
+.ide{background:var(--code);border-radius:16px;overflow:hidden;border:1px solid #111}.ideTop{background:#0f766e;color:#fff;padding:9px 12px;display:flex;align-items:center;justify-content:space-between}.ideToolbar{background:#f2f3f4;padding:8px 10px;display:flex;gap:8px;border-bottom:1px solid #c8cdd2}.ideToolbar button{border:0;background:white;border-radius:7px;padding:7px 10px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.1)}.ideToolbar button.primary{background:#0f766e;color:white}.editorWrap{position:relative}.codeEditor{width:100%;min-height:355px;border:0;outline:none;background:var(--code);color:#e6edf3;font:14px/1.55 Consolas,Monaco,monospace;padding:14px 15px;resize:vertical;tab-size:2}.serial{background:#0f1113;color:#b8f2ce;font:12px/1.55 Consolas,monospace;padding:10px 12px;min-height:62px;border-top:1px solid #30363d;white-space:pre-wrap}.codeStatus{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#f0f3f6;color:#4d5969}.codeStatus.ok{background:#e8f7f0;color:#176943}.codeStatus.warn{background:#fff8e9;color:#725520}.codeStatus.err{background:#fff0f0;color:#9b3b3b}
+.hints{display:grid;gap:8px;margin-top:12px}.hint{border:1px solid var(--border);border-radius:11px;overflow:hidden}.hint.locked{opacity:.48}.hint.locked button{cursor:not-allowed}.hint button{width:100%;text-align:left;border:0;background:#f7fafc;padding:10px 12px;font-weight:700;cursor:pointer}.hintContent{display:none;padding:12px;background:#fff}.hint.open .hintContent{display:block}.pap{display:grid;gap:8px;justify-items:center}.papBox{border:2px solid #495665;background:#fff;border-radius:9px;padding:8px 12px;text-align:center;min-width:230px}.papDiamond{width:160px;height:80px;border:2px solid #495665;transform:rotate(45deg);display:grid;place-items:center;background:#fff;margin:20px}.papDiamond span{transform:rotate(-45deg);font-size:13px;text-align:center}.arrow{font-size:22px;color:#758397}
+.simControls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.simControls button{border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 11px;cursor:pointer}.simControls .run{background:var(--blue);color:white;border-color:var(--blue)}.simPanel{border:1px solid var(--border);border-radius:15px;overflow:hidden;background:#f7fafc}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.kpi{border:1px solid var(--border);background:#fff;border-radius:11px;padding:9px}.kpi small{color:var(--muted)}.kpi b{display:block;margin-top:3px;font-size:18px}.sliderRow{display:grid;grid-template-columns:130px 1fr 65px;gap:9px;align-items:center;margin:9px 0}.sliderRow input{width:100%}
+.checkpoint{background:#f4f8ff;border:1px solid #cddcf9;border-radius:14px;padding:14px}.checkpoint h3{margin-top:0}.checkMsg{margin-top:10px;font-size:13px}.nextBar{margin-top:18px;display:flex;justify-content:space-between;gap:10px;align-items:center}.nextBtn{border:0;border-radius:12px;background:var(--teal);color:white;padding:11px 16px;font-weight:800;cursor:pointer}.nextBtn:disabled{background:#c9d3db;color:#7b8791;cursor:not-allowed}.tiny{font-size:12px;color:var(--muted)}
+.teacherOnly{display:none}.teacher .teacherOnly{display:block}.teacher .studentOnly{display:none}.solution{border:1px solid #bddfcf;background:#eef9f3;border-radius:12px;padding:12px;margin-top:10px}.solution b{color:#176943}.presentation .topbar,.presentation .progressStrip,.presentation .hints,.presentation .taskHints,.presentation .topActions{display:none}.presentation main{max-width:1600px;padding-top:16px}.presentation .card{box-shadow:none}.presentation .hero h1{font-size:42px}.presentation .grid{grid-template-columns:1fr 1fr}
+.modal{position:fixed;inset:0;background:rgba(14,24,34,.55);display:none;align-items:center;justify-content:center;z-index:100}.modal.show{display:flex}.modalCard{width:min(450px,92vw);background:white;border-radius:18px;padding:20px;box-shadow:0 25px 80px rgba(0,0,0,.25)}.modalCard h2{margin-top:0}.modalCard input{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px}.modalActions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.modalActions button{border:0;border-radius:10px;padding:9px 12px;cursor:pointer}.dangerText{color:#a34747;font-size:12px}
+.toast{position:fixed;right:18px;bottom:18px;background:#17212b;color:#fff;padding:11px 14px;border-radius:11px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:.2s;z-index:120}.toast.show{opacity:1;transform:translateY(0)}
+
+.startHero{
+  background:linear-gradient(135deg,#0b8f87 0%,#176f93 58%,#244c7a 100%);
+  color:#fff;border-radius:24px;padding:34px;box-shadow:var(--shadow);margin-bottom:18px;
+  display:grid;grid-template-columns:1.35fr .65fr;gap:28px;align-items:center
+}
+.startHero .eyebrow{color:#bff5ec}.startHero h1{font-size:42px;margin:6px 0 12px}
+.startHero p{font-size:17px;line-height:1.6;color:#edf8fb;margin:0;max-width:850px}
+.startRobot{
+  min-height:220px;border-radius:22px;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);display:grid;place-items:center;position:relative;overflow:hidden
+}
+.startRobot .wall{position:absolute;left:22px;right:22px;top:38px;height:8px;border-radius:8px;background:#fff}
+.startRobot .targetLine{position:absolute;left:24px;right:24px;top:104px;border-top:2px dashed rgba(255,255,255,.75)}
+.startRobot .robotMini{position:absolute;left:48%;top:128px;width:92px;height:50px;border-radius:15px;background:#dff6f4;transform:translateX(-50%);box-shadow:0 12px 28px rgba(0,0,0,.2)}
+.startRobot .robotMini:before,.startRobot .robotMini:after{content:'';position:absolute;top:8px;width:13px;height:34px;border-radius:6px;background:#17212b}
+.startRobot .robotMini:before{left:-9px}.startRobot .robotMini:after{right:-9px}
+.startRobot .sensorMini{position:absolute;width:44px;height:15px;border-radius:6px;background:#15a493;top:-12px;left:24px}
+.startRobot .beamMini{position:absolute;left:50%;top:50px;height:79px;border-left:2px dashed #bff5ec}
+.startRobot .caption{position:absolute;bottom:15px;font-size:12px;color:#e3f9f6}
+.startGrid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+.startSteps{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.startStep{border:1px solid var(--border);border-radius:14px;padding:13px;background:#fbfdff}
+.startStep b{display:block;margin-bottom:4px}.startStep span{font-size:13px;color:var(--muted);line-height:1.45}
+.pathFlow{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.pathChip{padding:8px 11px;border-radius:999px;background:#e9f6f4;color:#176b65;font-weight:800;font-size:13px;border:1px solid #c9e9e4}
+.startAction{display:flex;justify-content:flex-end;margin-top:18px}
+.startBtn{border:0;border-radius:13px;background:var(--teal);color:#fff;padding:12px 18px;font-weight:800;cursor:pointer;font-size:15px}
+.varLegend{margin-top:10px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fbfcfe}
+.varLegendTitle{padding:8px 11px;background:#edf2f6;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#5a6879}
+.varRow{display:grid;grid-template-columns:74px 1fr;border-top:1px solid var(--border)}
+.varRow:first-of-type{border-top:0}
+.varSymbol{padding:8px 10px;font-family:Cambria Math,Times New Roman,serif;font-weight:800;text-align:center;background:#f7fafc}
+.varMeaning{padding:8px 11px;font-size:13px;line-height:1.4;color:#435164}
+.mathLabel{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:800;margin-top:14px}
+@media(max-width:900px){
+  .startHero{grid-template-columns:1fr}.startRobot{min-height:185px}
+  .startGrid{grid-template-columns:1fr}.startSteps{grid-template-columns:1fr}
+}
+
+
+/* V4 additions */
+/* V5: code-driven simulation */
+.simTruthNote{margin:10px 0 12px;padding:10px 12px;border-radius:11px;background:#eef8f7;border:1px solid #c8e8e3;color:#245f5a;font-size:13px;line-height:1.45}.motorKpi b.stopped{color:#9b3b3b}.motorKpi b.running{color:#176943}.wheelLabel{font:700 11px Segoe UI,Arial,sans-serif}.paramCodeNote{font-size:11px;color:var(--muted);margin:-2px 0 9px}.brandMark{box-shadow:0 4px 12px rgba(11,143,135,.22)}
+
+.brandMark svg{width:25px;height:25px;display:block}.brandMark svg *{vector-effect:non-scaling-stroke}
+.hintContent{max-width:100%;overflow:hidden}.hintContent pre{max-width:100%;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;margin:0;font:13px/1.5 Consolas,Monaco,monospace}
+.checkFeedback{margin-top:10px;border-radius:11px;padding:10px 12px;line-height:1.5}.checkFeedback.good{background:#eaf8f1;border:1px solid #bfe3cf;color:#176943}.checkFeedback.bad{background:#fff2f1;border:1px solid #f0cbc7;color:#8c3935}.checkFeedback .merke{display:block;margin-top:5px;font-weight:800}
+.loopCard{border:1px solid var(--border);border-radius:17px;background:#fbfdff;padding:16px;margin-top:16px}.loopTitle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.loopTitle h3{margin:0}.focusBadge{font-size:12px;font-weight:800;color:#0c716b;background:#dff5f2;border:1px solid #b9e4df;padding:6px 9px;border-radius:999px}
+.controlLoop{display:grid;grid-template-columns:auto 34px auto 34px minmax(160px,1.2fr) 34px minmax(150px,1fr) 34px minmax(150px,1fr);align-items:center;gap:5px;overflow-x:auto;padding:8px 2px 12px}.loopBox{min-width:135px;border:1px solid #ccd8e3;border-radius:13px;background:white;padding:11px;text-align:center;box-shadow:0 4px 14px rgba(27,45,65,.05)}.loopBox strong{display:block;margin-bottom:4px}.loopBox small{display:block;color:var(--muted);line-height:1.35}.loopBox.regulator{border:2px solid var(--teal);background:#eaf8f6;box-shadow:0 0 0 4px rgba(11,143,135,.08)}.loopArrow{text-align:center;font-size:24px;color:#6a7887;font-weight:700}.feedbackArrow{border-top:2px solid #7e8b98;margin:6px 40px 0;padding-top:7px;text-align:center;color:#627083;font-size:12px}.loopCompare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.loopCompare>div{border-radius:13px;padding:12px 14px;border:1px solid var(--border);background:#fff}.loopCompare b{display:block;margin-bottom:6px}.loopCompare ul{margin:0;padding-left:18px;line-height:1.5;color:#455364}.scopeNote{margin-top:12px;padding:11px 13px;border-left:4px solid var(--orange);background:#fff9ec;border-radius:9px;color:#5d5141;line-height:1.5}
+.techModal .modalCard{width:min(980px,95vw);max-height:90vh;overflow:auto}.techGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.techBlock{border:1px solid var(--border);border-radius:15px;padding:15px;background:#fbfdff}.techBlock h3{margin:0 0 8px}.techSchematic{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0}.techNode{border:1px solid #cbd7e1;background:#fff;padding:9px 11px;border-radius:10px;font-weight:700}.techArrow{font-size:20px;color:#647384}.miniCode{background:#1f2428;color:#e6edf3;border-radius:11px;padding:11px;overflow:auto;white-space:pre;font:12px/1.5 Consolas,monospace}.pinTable{width:100%;border-collapse:collapse;margin-top:10px}.pinTable th,.pinTable td{border-bottom:1px solid var(--border);padding:8px;text-align:left;font-size:13px}.pinTable th{background:#eef3f7}.techNote{font-size:12px;color:var(--muted);line-height:1.45}
+.teacherCodePanel{margin-top:12px;border:1px solid #b9d9ca;border-radius:13px;overflow:hidden;background:#13202a}.teacherCodeHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;background:#e9f7f0;color:#1c5940}.teacherCodeHead b{color:#1c5940}.teacherCodeToggle{display:flex;gap:6px}.teacherCodeToggle button{border:1px solid #b7d9c8;background:#fff;border-radius:8px;padding:6px 8px;cursor:pointer;font-size:12px}.teacherCodeToggle button.active{background:#176943;color:#fff;border-color:#176943}.numberedCode{padding:9px 0;overflow:auto;max-height:520px;font:12.5px/1.55 Consolas,Monaco,monospace;color:#e6edf3;background:#1f2428}.codeLine{display:grid;grid-template-columns:48px minmax(0,1fr);min-width:max-content}.codeLine .ln{color:#7d8995;text-align:right;padding-right:12px;user-select:none}.codeLine .src{white-space:pre;padding-right:18px}.codeLine.reg{background:rgba(11,143,135,.20);border-left:3px solid #32c8bb}.codeLine.key .src{color:#fff3b0;font-weight:700}.teacherCodeFoot{padding:8px 11px;background:#263039;color:#b7c2cc;font-size:11px}.teacherSolutionOld{display:none!important}
+@media(max-width:950px){.controlLoop{grid-template-columns:1fr;overflow:visible}.loopArrow{transform:rotate(90deg)}.loopCompare,.techGrid{grid-template-columns:1fr}.feedbackArrow{margin:8px 0}.techModal .modalCard{width:94vw}}
+
+@media(max-width:1050px){.grid{grid-template-columns:1fr}.topbarInner{flex-wrap:wrap}.brand{min-width:auto}.stageNav{order:3;width:100%}.hero{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.everyday{grid-template-columns:76px 1fr}.topActions{margin-left:auto}}
+
+/* V6: reference run, behavior diagnostics and per-page reset */
+.simModeBar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}
+.referenceBtn{background:#eef7f5!important;color:#126d65!important;border:1px solid #bfe3de!important}
+.referenceBtn:disabled{opacity:.45;cursor:not-allowed}
+.simBehavior{margin:10px 0 12px;padding:11px 13px;border-radius:11px;border:1px solid #d8e0e7;background:#f7f9fb;font-size:13px;line-height:1.45}
+.simBehavior.ok{border-color:#bfe4d7;background:#eef9f5;color:#176044}
+.simBehavior.warn{border-color:#efcf8c;background:#fff8e8;color:#77520b}
+.simBehavior.info{border-color:#c9d9f7;background:#f3f7ff;color:#35517e}
+.simModeBadge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:#eaf1f7;color:#4b5968;font-size:12px;font-weight:800;margin-bottom:8px}
+.simModeBadge.reference{background:#e5f5f2;color:#126d65}
+.pageResetBtn{border:1px solid #d6dee6;background:#fff;color:#5a6775;border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer}
+.pageResetBtn:hover{background:#f4f7f9}
+.pathLegend{font-size:12px;color:#667487;margin:5px 0 10px}
+.pathLegend b{color:#35517e}
+
+
+/* Version 7: Feedback, Hilfen, Schüler-IDE mit Zeilennummern */
+.taskFeedback{margin-top:9px;padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.5;display:none}
+.taskFeedback.show{display:block}.taskFeedback.good{background:#e9f7f0;border:1px solid #b9dfcd;color:#176943}.taskFeedback.partial{background:#fff8e9;border:1px solid #efd49a;color:#725520}.taskFeedback.bad{background:#fff0f0;border:1px solid #efc4c4;color:#943f3f}
+.taskFeedback .merke{display:block;margin-top:6px;font-weight:800}.taskAction{margin-top:9px;border:0;background:#2f6feb;color:white;border-radius:9px;padding:8px 11px;cursor:pointer;font-weight:700}
+.taskHints{display:grid;gap:7px;margin-top:10px}.taskHint{border:1px solid var(--border);border-radius:10px;overflow:hidden}.taskHint button{width:100%;text-align:left;border:0;background:#f8fafc;padding:8px 10px;cursor:pointer;font-weight:700;color:#455365}.taskHintContent{display:none;padding:10px 12px;background:white;font-size:13px;line-height:1.5}.taskHint.open .taskHintContent{display:block}.taskHint.locked{opacity:.48}.taskHint.locked button{cursor:not-allowed}
+.editorWrap{display:grid;grid-template-columns:52px minmax(0,1fr);background:var(--code);position:relative}.lineGutter{background:#171b1f;color:#77838f;font:14px/1.55 Consolas,Monaco,monospace;padding:14px 8px 14px 0;text-align:right;user-select:none;overflow:hidden;white-space:pre;min-height:355px;border-right:1px solid #30363d}.lineGutter .gline{display:block;height:21.7px}.lineGutter .gline.err{color:#fff;background:#b54444;font-weight:800;border-radius:4px;padding-right:4px}.codeEditor{min-height:355px;padding:14px 15px;margin:0;white-space:pre;overflow:auto}.compilerList{margin:7px 0 0;padding-left:18px}.compilerList li{margin:3px 0}.compilerLine{font-family:Consolas,Monaco,monospace}
+.feedbackPath{display:grid;grid-template-columns:minmax(170px,1fr) 46px minmax(190px,1.1fr) 46px minmax(180px,1fr);align-items:center;gap:6px;margin:6px 0 4px}.sensorBox{border:2px solid #4a8aa5!important;background:#eef8fc!important}.feedbackBack{grid-column:1 / 6;border-top:2px solid #708191;margin:0 44px;padding:8px 0 0;text-align:center;color:#5f6e7e;font-size:12px;position:relative}.feedbackBack:before{content:'↰';font-size:22px;margin-right:8px;color:#4a8aa5}.feedbackDown{text-align:center;font-size:22px;color:#6a7887}.feedbackX{font-size:12px;color:#5f6e7e;text-align:center}
+.formula sub{font-size:.68em}.mathNote{margin-top:7px;font-size:12px;color:var(--muted);line-height:1.45}
+@media(max-width:950px){.feedbackPath{grid-template-columns:1fr}.feedbackDown{transform:rotate(90deg)}.feedbackBack{grid-column:1;margin:4px 0}.feedbackX{display:none}.editorWrap{grid-template-columns:45px minmax(0,1fr)}}
+
+
+/* V8: klassischer Regelkreis auf der Startseite */
+.classicLoopWrap{border:1px solid var(--border);background:#fff;border-radius:16px;padding:14px;overflow:auto}
+.classicLoopSvg{display:block;width:100%;min-width:860px;height:auto}
+.loopMap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.loopMap div{border:1px solid var(--border);border-radius:11px;padding:9px 10px;background:#fbfdff;font-size:12px;line-height:1.4}
+.loopMap b{display:block;color:#294053;margin-bottom:3px}
+@media(max-width:900px){.loopMap{grid-template-columns:1fr 1fr}}
+
+/* V8: Arduino-Editor bewusst kompakt und scrollbar */
+.editorWrap{height:400px;min-height:400px;max-height:400px;overflow:hidden}
+.lineGutter{height:400px;min-height:0;max-height:400px;overflow:hidden}
+.codeEditor{height:400px;min-height:0;max-height:400px;resize:none;overflow-y:scroll;overflow-x:auto;scrollbar-gutter:stable;}
+
+/* V8: Technikhilfe vollständig einspaltig */
+.techModal .modalCard{width:min(820px,95vw)}
+.techGrid{display:block!important}
+.techBlock{margin:0 0 16px 0}
+.techSchematic{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:6px;margin:12px 0}
+.techSchematic .techNode{text-align:center}
+.techSchematic .techArrow{transform:none!important;text-align:center;font-size:18px}
+.techFormula{font-family:Cambria Math,Times New Roman,serif;font-size:22px;text-align:center;padding:10px 12px;border:1px solid var(--border);background:#fff;border-radius:10px;margin:10px 0}
+.techList{margin:8px 0 0;padding-left:20px;line-height:1.55}
+.techDivider{height:1px;background:var(--border);margin:4px 0 16px}
+
+/* kleine Info für tolerantere Freitextprüfung */
+.feedbackNote{margin-top:7px;font-size:11px;color:var(--muted);line-height:1.4}
+
+\n/* V9: Lösung nach ausgeschöpfter Hilfekette */
+.solutionGate{display:none;margin-top:10px;border:1px solid #e5c97a;background:#fffaf0;border-radius:12px;padding:11px 12px;font-size:13px;line-height:1.5}
+.solutionGate.show{display:block}.solutionGate button{border:0;border-radius:9px;padding:8px 11px;background:#8a641c;color:#fff;font-weight:700;cursor:pointer}.solutionGate .solutionReveal{display:none;margin-top:10px;padding:10px;border-radius:9px;background:#fff;border:1px solid #ead9a9}.solutionGate.revealed .solutionReveal{display:block}.solutionGate pre{max-height:310px;overflow:auto;background:#101418;color:#e6edf3;border-radius:8px;padding:10px;white-space:pre;font:12px/1.5 Consolas,monospace}
+/* V9: Code-Qualität und PID-Tuning */
+.codeCoach{display:none;margin-top:12px;border:1px solid #cfe1d9;background:#f3fbf7;border-radius:13px;padding:12px 14px;line-height:1.5;font-size:13px}.codeCoach.show{display:block}.codeCoach h4{margin:0 0 6px;color:#176943}.codeCoach ul{margin:7px 0 0;padding-left:20px}.codeCoach .expert{margin-top:8px;padding-top:8px;border-top:1px dashed #bcd2c8;color:#365a4d}
+.pidTune{display:none;margin:10px 0 12px;border:1px solid #c9d9ef;background:#f5f9ff;border-radius:13px;padding:12px 14px;font-size:13px;line-height:1.5}.pidTune.show{display:block}.pidTune.good{background:#eef9f3;border-color:#b9dfca}.pidTune.warn{background:#fff8e9;border-color:#ead59e}.pidTune.bad{background:#fff0f0;border-color:#efc4c4}.pidMetrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:9px 0}.pidMetric{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:9px;padding:7px;text-align:center}.pidMetric small{display:block;color:#6b7785}.pidMetric b{font-size:14px}.usedSolutionTag{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:999px;background:#fff0c9;color:#805b12;font-size:10px;font-weight:800}@media(max-width:760px){.pidMetrics{grid-template-columns:1fr 1fr}}
+
+
+/* V10: Zeitmessung und Reglervergleich */
+.timeLab{margin:12px 0;border:1px solid #cbd9e8;background:#f8fbff;border-radius:15px;padding:12px 14px}
+.timeLabHead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.simClockWrap{display:flex;align-items:baseline;gap:9px}.simClockWrap small{color:#647386;font-weight:700}.simClock{font-size:30px;line-height:1;font-weight:900;color:#173a5a;font-variant-numeric:tabular-nums}
+.timeStatus{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;background:#edf2f7;color:#526170}.timeStatus.inband{background:#fff5d7;color:#7a5b0d}.timeStatus.stable{background:#e7f7ee;color:#176943}.timeStatus.leftband{background:#fff0ef;color:#8d3f3b}.timeStatus.paused{background:#eef1f5;color:#5d6875}
+.timingGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.timingMetric{background:white;border:1px solid #dce5ee;border-radius:11px;padding:9px 10px}.timingMetric small{display:block;color:#6a7788;margin-bottom:3px}.timingMetric b{font-size:17px;color:#26384a;font-variant-numeric:tabular-nums}
+.timeExplain{margin-top:8px;font-size:11px;color:#667487;line-height:1.45}
+.timingCompare{margin:12px 0 4px;border:1px solid var(--border);border-radius:13px;overflow:hidden;background:#fff}.timingCompareHead{padding:9px 11px;background:#eef4f8;font-weight:800;color:#33485c}.timingCompare table{width:100%;border-collapse:collapse}.timingCompare th,.timingCompare td{padding:7px 9px;border-top:1px solid #e5ebf0;text-align:left;font-size:12px}.timingCompare th{color:#607084;background:#fbfcfd}.timingCompare td:nth-child(n+2),.timingCompare th:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums}.timingCompare .currentRow{background:#f0faf8}.timingCompareNote{padding:8px 10px;font-size:11px;color:#687789;border-top:1px solid #e5ebf0}
+.pidMetrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:760px){.timingGrid{grid-template-columns:1fr}.simClock{font-size:26px}.pidMetrics{grid-template-columns:1fr 1fr}.timingCompare{overflow-x:auto}.timingCompare table{min-width:520px}}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbarInner">
+  <div class="brand"><div class="brandMark" aria-label="Regelkreis"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="9" cy="18" r="4.2" fill="none" stroke="white" stroke-width="2.2"/><path d="M3 18h2M13.2 18H18" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"/><rect x="18" y="12" width="13" height="12" rx="2.2" fill="none" stroke="white" stroke-width="2.2"/><path d="M31 18h5M34 18v11H9v-6" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 14.5h5M9 12v5" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M6.5 21.5h5" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><b>NIT Lernlabor</b><small>Regelungstechnik · Wandfahrt</small></div></div>
+  <div id="stageNav" class="stageNav"></div>
+  <div class="topActions"><button id="techHelpBtn" class="iconBtn">? Technik</button><button id="teacherBtn" class="iconBtn">🔐 Lehrkraft</button><button id="resetAllBtn" class="iconBtn" title="Fortschritt zurücksetzen">↺</button></div>
+</div></div>
+<main>
+  <section class="hero"><div><div class="eyebrow" id="stageEyebrow">Lernschritt</div><h1 id="stageTitle"></h1><p id="stageSubtitle"></p></div><div id="modePill" class="modePill">Schüleransicht</div></section>
+  <div id="progressStrip" class="progressStrip"></div>
+  <div id="content"></div>
+</main>
+
+<div id="teacherModal" class="modal"><div class="modalCard">
+  <h2>Lehrkräftebereich</h2><p>Für diesen Prototyp ist der Zugang nur clientseitig geschützt. Für eine Veröffentlichung sollte der Login serverseitig umgesetzt werden.</p>
+  <input id="teacherPassword" type="password" placeholder="Passwort" />
+  <div id="teacherError" class="dangerText"></div>
+  <div class="modalActions"><button id="cancelTeacher">Abbrechen</button><button id="loginTeacher" style="background:#0b8f87;color:white">Anmelden</button></div>
+</div></div>
+
+<div id="techModal" class="modal techModal"><div class="modalCard">
+  <h2>Technikhilfe: Sensor & Motoransteuerung</h2>
+  <p class="techNote">Die folgenden technischen Grundlagen bleiben bei allen Reglern gleich. Die Reglerlogik selbst entwickelst du auf den einzelnen Lernseiten.</p>
+
+  <section class="techBlock">
+    <h3>1 · Ultraschallsensor HC-SR04</h3>
+    <p>Der Arduino löst über <b>TRIG</b> einen kurzen Ultraschallimpuls aus. Der Schall wird an der Wand reflektiert. Über <b>ECHO</b> misst der Arduino die Zeit, bis das Echo wieder am Sensor ankommt.</p>
+    <div class="techSchematic">
+      <span class="techNode">Arduino D7</span>
+      <span class="techArrow">↓ TRIG</span>
+      <span class="techNode">HC-SR04 sendet Ultraschall</span>
+      <span class="techArrow">↓</span>
+      <span class="techNode">Wand reflektiert den Schall</span>
+      <span class="techArrow">↓ ECHO</span>
+      <span class="techNode">Arduino D8 misst die Laufzeit</span>
+    </div>
+    <div class="miniCode">digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+
+dauer = pulseIn(echoPin, HIGH);</div>
+  </section>
+
+  <section class="techBlock">
+    <h3>2 · Abstand berechnen</h3>
+    <p>Aus der gemessenen Laufzeit wird der Abstand zur Wand bestimmt.</p>
+    <div class="techFormula">d = (t · v) / 2</div>
+    <ul class="techList">
+      <li><b>d</b>: Abstand zur Wand</li>
+      <li><b>t</b>: gemessene Laufzeit des Ultraschalls</li>
+      <li><b>v</b>: Schallgeschwindigkeit</li>
+      <li><b>/ 2</b>: Der Schall legt den Weg zur Wand und wieder zurück zurück.</li>
+    </ul>
+    <div class="miniCode">abstand = dauer * 0.034 / 2;</div>
+  </section>
+
+  <section class="techBlock">
+    <h3>3 · Motortreiber</h3>
+    <p>Die Arduino-Pins liefern nur <b>Steuersignale</b>. Die Motoren benötigen mehr Strom, als ein Arduino-Pin bereitstellen darf. Deshalb sitzt zwischen Arduino und Motoren eine <b>Treiberplatine</b>.</p>
+    <div class="techSchematic">
+      <span class="techNode">Arduino</span>
+      <span class="techArrow">↓ Steuersignale</span>
+      <span class="techNode">Motortreiber</span>
+      <span class="techArrow">↓ Motorstrom</span>
+      <span class="techNode">linker und rechter Motor</span>
+    </div>
+  </section>
+
+  <section class="techBlock">
+    <h3>4 · PWM und Lenken</h3>
+    <p>Mit <code>analogWrite()</code> wird die mittlere Motorleistung über PWM eingestellt. Der Wertebereich reicht von <b>0</b> bis <b>255</b>.</p>
+    <div class="miniCode">analogWrite(pwmLinks, 80);
+analogWrite(pwmRechts, 160);</div>
+    <ul class="techList">
+      <li><b>0</b>: Motor steht.</li>
+      <li><b>255</b>: maximale PWM-Ansteuerung.</li>
+      <li>Unterschiedliche PWM-Werte links und rechts lassen den Roboter lenken.</li>
+      <li>In der Simulation wird genau die Motoransteuerung verwendet, die zuletzt erfolgreich compiliert wurde.</li>
+    </ul>
+  </section>
+
+  <section class="techBlock">
+    <h3>5 · Beispiel-Pinbelegung dieser Lernumgebung</h3>
+    <table class="pinTable"><thead><tr><th>Funktion</th><th>Arduino</th><th>Bauteil / Treiber</th></tr></thead><tbody>
+      <tr><td>Ultraschall auslösen</td><td>D7</td><td>HC-SR04 TRIG</td></tr>
+      <tr><td>Echo messen</td><td>D8</td><td>HC-SR04 ECHO</td></tr>
+      <tr><td>Drehzahl linker Motor</td><td>D5 (PWM)</td><td>Treiber PWM / EN links</td></tr>
+      <tr><td>Drehzahl rechter Motor</td><td>D6 (PWM)</td><td>Treiber PWM / EN rechts</td></tr>
+      <tr><td>Richtung linker Motor</td><td>D2 / D3</td><td>Treiber IN links</td></tr>
+      <tr><td>Richtung rechter Motor</td><td>D4 / D9</td><td>Treiber IN rechts</td></tr>
+      <tr><td>Bezugspotential</td><td>GND</td><td>GND von Arduino und Treiber gemeinsam</td></tr>
+    </tbody></table>
+    <p class="techNote"><b>Hinweis:</b> Die Pinbelegung entspricht dem Beispielcode dieser Lernumgebung. Vor dem Einsatz am realen Schulroboter muss sie mit der tatsächlichen Verkabelung abgeglichen werden.</p>
+  </section>
+
+  <section class="techBlock">
+    <h3>6 · Einordnung in den Regelkreis</h3>
+    <p><b>HC-SR04:</b> misst den Istwert <b>x</b> und führt ihn als Messinformation zum Vergleicher zurück.</p>
+    <p><b>Regler:</b> berechnet aus der Regelabweichung <b>e</b> die Stellgröße <b>y</b>.</p>
+    <p><b>Motortreiber und Motoren:</b> setzen die Stellgröße in eine reale Änderung der Roboterbewegung um.</p>
+  </section>
+
+  <div class="modalActions"><button id="closeTechHelp" style="background:#0b8f87;color:white">Schließen</button></div>
+</div></div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const TARGET=20;
+const TARGET_TOLERANCE=1.0; // Zielbereich: 19–21 cm
+const STABLE_HOLD=2.0; // für 2 s ununterbrochen im Zielbereich = stabil eingeregelt
+const PASSWORD='NIT2026!'; // Demo-Passwort, kein echter Sicherheitsschutz
+const LEGACY_PASSWORD='NwT2026!';
+const stages=[
+{
+ id:'zp',short:'Zweipunkt',title:'Zweipunktregler + Hysterese',subtitle:'Zwei feste Stellzustände – und ein Bereich, in dem nicht sofort umgeschaltet wird.',
+ problem:'Der Roboter soll 20 cm Abstand zur Wand halten. Ein Zweipunktregler kennt nur zwei Reaktionen: zur Wand oder von der Wand weg.',
+ everydayTitle:'Bügeleisen',icon:'♨️',everyday:'Beim Bügeleisen wird die Heizung bei zu niedriger Temperatur eingeschaltet und bei zu hoher Temperatur ausgeschaltet. Eine Hysterese sorgt dafür, dass nicht bei jeder winzigen Schwankung sofort umgeschaltet wird.',
+ everydayQ:'Warum ist eine Hysterese beim Bügeleisen sinnvoll?',formula:'Zwei Zustände: EIN / AUS bzw. links / rechts',
+ code:`// HC-SR04\nint trigPin = 7;\nint echoPin = 8;\n\nfloat abstand;\nfloat sollAbstand = 20;\n\nvoid loop() {\n  // Abstand messen (vorgegeben)\n  abstand = dauer * 0.034 / 2;\n\n  // ===== ZWEIPUNKTREGLER =====\n  if (abstand > __________________________) {\n    analogWrite(pwmLinks, ______);\n    analogWrite(pwmRechts, ______);\n  }\n  else if (abstand < __________________________) {\n    analogWrite(pwmLinks, ______);\n    analogWrite(pwmRechts, ______);\n  }\n  // ===========================\n}`,
+ solution:`if (abstand > 22) {\n  analogWrite(pwmLinks, 80);\n  analogWrite(pwmRechts, 160);\n}\nelse if (abstand < 18) {\n  analogWrite(pwmLinks, 160);\n  analogWrite(pwmRechts, 80);\n}`,
+ hint1:'Welche zwei Grenzwerte liegen bei einem Sollwert von 20 cm und einer Hysterese von ±2 cm ober- und unterhalb des Sollwerts?',
+ pap:['Sollwert festlegen','Istwert messen','Istwert > obere Grenze?','zur Wand lenken','Istwert < untere Grenze?','von der Wand weg lenken','sonst: Stellzustand beibehalten'],
+ codeHint:'if (abstand > sollAbstand + hysterese) { ... }\nelse if (abstand < sollAbstand - hysterese) { ... }\n\nDie beiden analogWrite-Werte bestimmen direkt, wie schnell jedes Rad in der Simulation läuft.',
+ mcq:{q:'Welche Aussage beschreibt die Hysterese korrekt?',opts:['Sie verhindert jede Regelabweichung.','Sie legt einen Bereich fest, in dem nicht umgeschaltet wird.','Sie macht beide Motoren gleich schnell.'],correct:1},
+ evalQ:'Warum fährt der Roboter trotz Hysterese typischerweise noch um den Sollabstand herum?',
+ solutionText:'Der Zweipunktregler reagiert nur mit zwei festen Stellzuständen. Durch Trägheit wird der Schaltpunkt überschritten. Die Hysterese reduziert häufiges Umschalten, beseitigt das Schwingen aber nicht vollständig.',
+ params:{hys:2},nextProblem:'Der Regler lenkt bei 1 cm Abweichung genauso stark wie bei 10 cm. Wie könnte die Reaktion von der Größe des Fehlers abhängen?'
+},
+{
+ id:'p',short:'P',title:'P-Regler',subtitle:'Je größer die aktuelle Regelabweichung, desto stärker die Reaktion.',
+ problem:'Der Zweipunktregler reagiert immer gleich stark. Der P-Regler soll bei großer Abweichung stark und nahe am Sollwert nur schwach korrigieren.',
+ everydayTitle:'Tempomat',icon:'🚗',everyday:'Ein Tempomat reagiert stärker, wenn die aktuelle Geschwindigkeit weit unter dem Sollwert liegt. Nähert sich das Fahrzeug der Zielgeschwindigkeit, wird die Stellwirkung kleiner.',
+ everydayQ:'Wie verändert sich die Stellgröße, wenn sich die Regelabweichung halbiert?',formula:'y = y<sub>P</sub> = Kₚ · e &nbsp;&nbsp; mit &nbsp;&nbsp; e = w − x',
+ code:`float regelabweichung;\nfloat Kp = 0.8;\nfloat pAnteil;\n\n// ===== P-REGLER =====\nregelabweichung = ______________________;\npAnteil = _____________________________;\n\nkorrektur = pAnteil;\n// ====================`,
+ solution:`regelabweichung = sollAbstand - abstand;\nyP = Kp * regelabweichung;\nkorrektur = pAnteil;`,
+ hint1:'Die Regelabweichung ist Sollwert minus Istwert. Welche Größe muss anschließend mit Kp multipliziert werden?',
+ pap:['Sollwert festlegen','Istwert messen','Regelabweichung e = w − x bestimmen','P-Anteil yₚ = Kₚ · e berechnen','Stellgröße an Motoren ausgeben'],
+ codeHint:'regelabweichung = sollAbstand - abstand;\nyP = Kp * regelabweichung;',
+ mcq:{q:'Was bewirkt ein größeres Kp?',opts:['Der Regler reagiert grundsätzlich schwächer.','Der Regler reagiert auf denselben Fehler stärker.','Der I-Anteil wird größer.'],correct:1},
+ evalQ:'Warum kann bei einem P-Regler eine bleibende Regelabweichung auftreten?',solutionText:'Bei e = 0 ist auch der P-Anteil 0. Benötigt die Strecke eine dauerhafte Stellwirkung, stellt sich deshalb ein kleiner bleibender Fehler ein, der diese Stellwirkung erzeugt.',
+ params:{kp:.8},nextProblem:'Ein kleiner Fehler bleibt dauerhaft bestehen. Wie könnte ein Regler berücksichtigen, wie lange ein Fehler schon vorhanden ist?'
+},
+{
+ id:'i',short:'I',title:'I-Regler',subtitle:'Nicht nur die aktuelle Abweichung zählt – sondern ihre Summe über die Zeit.',
+ problem:'Ein kleiner Fehler kann beim P-Regler dauerhaft bestehen bleiben. Der I-Regler summiert solche Fehler auf und erhöht damit die Stellwirkung.',
+ everydayTitle:'Raumheizung',icon:'🏠',everyday:'Stell dir vor, ein Raum bleibt wegen eines gekippten Fensters dauerhaft 1 °C zu kalt. Der I-Anteil sammelt diesen kleinen Fehler über die Zeit auf und erhöht dadurch die Heizleistung immer weiter, bis der Fehler verschwindet.',
+ everydayQ:'Was passiert mit der Fehlersumme, wenn ein kleiner Fehler lange bestehen bleibt?',formula:'y = y<sub>I</sub> = Kᵢ · Σ(e · Δt)',
+ code:`float regelabweichung;\nfloat summe = 0;\nfloat Ki = 0.18;\nfloat iAnteil;\n\n// ===== I-REGLER =====\nregelabweichung = sollAbstand - abstand;\nsumme = ______________________________;\niAnteil = _____________________________;\n\nkorrektur = iAnteil;\n// ====================`,
+ solution:`regelabweichung = sollAbstand - abstand;\nsumme = summe + regelabweichung * dt;\nyI = Ki * summe;\nkorrektur = iAnteil;`,
+ hint1:'Der I-Regler braucht eine Variable, die den bisherigen Fehler nicht ersetzt, sondern immer weiter aufsummiert.',
+ pap:['Sollwert festlegen','Istwert messen','Regelabweichung bestimmen','Fehlersumme = Fehlersumme + e · Δt','I-Anteil = Ki · Fehlersumme','Stellgröße ausgeben'],
+ codeHint:'summe = summe + regelabweichung * dt;\nyI = Ki * summe;',
+ mcq:{q:'Welche typische Eigenschaft hat ein I-Regler?',opts:['Er kann einen dauerhaft kleinen Fehler ausregeln.','Er reagiert nur auf die Änderungsgeschwindigkeit.','Er kennt nur EIN und AUS.'],correct:0},
+ evalQ:'Warum kann ein I-Regler überschwingen?',solutionText:'Die aufsummierte Fehlersumme verschwindet am Sollwert nicht sofort. Der Regler wirkt deshalb noch weiter, obwohl der Sollwert schon erreicht oder überschritten wurde.',
+ params:{ki:.18},nextProblem:'Der I-Regler kann genau sein, reagiert aber häufig langsam. Können wir die schnelle P-Wirkung mit der genauen I-Wirkung kombinieren?'
+},
+{
+ id:'pi',short:'PI',title:'PI-Regler',subtitle:'P reagiert schnell, I beseitigt einen dauerhaft verbleibenden Fehler.',
+ problem:'P ist schnell, kann aber einen Offset hinterlassen. I kann den Offset beseitigen, ist aber oft langsam. Der PI-Regler kombiniert beide Wirkungen.',
+ everydayTitle:'Tempomat am Berg',icon:'⛰️',everyday:'Beim Auffahren auf einen langen Berg reagiert der P-Anteil sofort auf den Geschwindigkeitsverlust. Bleibt die Geschwindigkeit trotzdem leicht unter dem Sollwert, erhöht der I-Anteil die Stellwirkung so lange, bis der Fehler verschwindet.',
+ everydayQ:'Welche Aufgabe übernimmt der P-Anteil, welche der I-Anteil?',formula:'y = y<sub>P</sub> + y<sub>I</sub> = Kₚ · e + Kᵢ · Σ(e · Δt)',
+ code:`float Kp = 0.75;\nfloat Ki = 0.14;\nfloat summe = 0;\nfloat dt = 0.05;\nfloat regelabweichung, pAnteil, iAnteil, korrektur;\nint grundGeschwindigkeit = 120;\n\nregelabweichung = sollAbstand - abstand;\n\n// P-Anteil\nyP = Kp * regelabweichung;\n\n// I-Anteil\nsumme = summe + regelabweichung * dt;\nyI = Ki * summe;\n\n// ===== PI-REGLER =====\nkorrektur = ___________________________;\n// =====================`,
+ solution:`korrektur = yP + yI;
+analogWrite(pwmLinks, constrain(grundGeschwindigkeit + korrektur, 0, 255));
+analogWrite(pwmRechts, constrain(grundGeschwindigkeit - korrektur, 0, 255));`,
+ hint1:'Der PI-Regler soll beide bereits berechneten Anteile gleichzeitig nutzen.',
+ pap:['Istwert messen','Regelabweichung bestimmen','P-Anteil berechnen','Fehlersumme aktualisieren','I-Anteil berechnen','P + I addieren','Stellgröße ausgeben'],
+ codeHint:'korrektur = yP + yI;',
+ mcq:{q:'Warum ist die Kombination PI oft sinnvoll?',opts:['P macht den Regler schnell, I kann den bleibenden Fehler beseitigen.','I macht den Regler schneller als P und P verhindert Messrauschen.','Beide Anteile sind immer gleich groß.'],correct:0},
+ evalQ:'Beschreibe den Unterschied zwischen P- und PI-Verhalten im Diagramm.',solutionText:'PI reagiert durch den P-Anteil zunächst schnell. Der I-Anteil erhöht die Stellwirkung bei länger bestehendem Fehler und kann damit die bleibende Regelabweichung beseitigen.',
+ params:{kp:.75,ki:.14},nextProblem:'Ein PI-Regler kann den Sollwert erreichen, aber noch überschwingen. Welche Information könnte helfen, frühzeitig zu erkennen, dass sich der Roboter sehr schnell auf die Wand zubewegt?'
+},
+{
+ id:'d',short:'D',title:'D-Anteil',subtitle:'Der D-Anteil reagiert darauf, wie schnell sich die Regelabweichung verändert.',
+ problem:'Nicht nur die Größe eines Fehlers ist wichtig. Wenn sich der Abstand sehr schnell ändert, sollte der Regler früh reagieren, bevor der Sollwert überschritten wird.',
+ everydayTitle:'Abstandsregeltempomat',icon:'🚙',everyday:'Zwei Autos können beide 30 m Abstand zum Vorderfahrzeug haben. Kritischer ist die Situation, in der sich der Abstand gerade sehr schnell verkleinert. Der D-Anteil berücksichtigt genau diese Änderungsgeschwindigkeit.',
+ everydayQ:'Warum reicht der aktuelle Abstand allein nicht aus, um die Situation vollständig zu beurteilen?',formula:'y = y<sub>D</sub> = K<sub>D</sub> · Δe / Δt',
+ code:`float alteRegelabweichung = 0;\nfloat Kd = 0.7;\nfloat dAnteil;\n\nregelabweichung = sollAbstand - abstand;\n\n// ===== D-ANTEIL =====\naenderung = _______________________________;\ndAnteil = __________________________________;\nalteRegelabweichung = ______________________;\n// ====================`,
+ solution:`aenderung = (regelabweichung - alteRegelabweichung) / dt;\nyD = Kd * aenderung;\nalteRegelabweichung = regelabweichung;
+analogWrite(pwmLinks, constrain(grundGeschwindigkeit + korrektur, 0, 255));
+analogWrite(pwmRechts, constrain(grundGeschwindigkeit - korrektur, 0, 255));`,
+ hint1:'Vergleiche die aktuelle Regelabweichung mit der Regelabweichung des vorherigen Zeitschritts.',
+ pap:['Istwert messen','Regelabweichung bestimmen','Änderung = (e − e_alt) / Δt','D-Anteil = Kd · Änderung','e_alt = e speichern'],
+ codeHint:'aenderung = (regelabweichung - alteRegelabweichung) / dt;\nyD = Kd * aenderung;',
+ mcq:{q:'Warum eignet sich ein D-Anteil nicht als alleiniger Regler?',opts:['Er reagiert nicht auf einen konstanten Fehler.','Er kann nur zwei Zustände annehmen.','Er summiert Fehler unbegrenzt auf.'],correct:0},
+ evalQ:'Welche Wirkung kann der D-Anteil in Kombination mit P und I haben?',solutionText:'Er reagiert auf schnelle Änderungen der Regelabweichung und kann dadurch früh gegensteuern. Das kann Überschwingen dämpfen und die Regelung beruhigen. Allein kann er einen konstanten Fehler nicht beseitigen.',
+ params:{kd:.7},nextProblem:'P kennt den aktuellen Fehler, I seine Vergangenheit und D seine Änderung. Was passiert, wenn wir alle drei Informationen kombinieren?'
+},
+{
+ id:'pid',short:'PID',title:'PID-Regler',subtitle:'Aktueller Fehler + Vergangenheit + Änderungsgeschwindigkeit.',
+ problem:'Der PID-Regler kombiniert P-, I- und D-Anteil. Die Herausforderung besteht darin, die drei Faktoren so abzustimmen, dass der Roboter schnell, genau und möglichst ruhig fährt.',
+ everydayTitle:'Drohne hält Flughöhe',icon:'🛸',everyday:'Eine Drohne muss schnell auf eine Höhenabweichung reagieren (P), eine dauerhaft kleine Abweichung durch Zusatzlast ausgleichen (I) und bei schneller Annäherung an die Sollhöhe früh abbremsen (D).',
+ everydayQ:'Ordne P, I und D jeweils eine Aufgabe bei der Höhenregelung der Drohne zu.',formula:'y = y<sub>P</sub> + y<sub>I</sub> + y<sub>D</sub>',
+ code:`float Kp = 0.50;
+float Ki = 0.01;
+float Kd = 1.80;
+float summe = 0;
+float alteRegelabweichung = 0;
+float dt = 0.05;
+float regelabweichung, pAnteil, iAnteil, dAnteil, aenderung, korrektur;
+int grundGeschwindigkeit = 120;
+
+// Regelabweichung bestimmen\nregelabweichung = __________________________;\n\n// P-Anteil\npAnteil = _________________________________;\n\n// I-Anteil\nsumme = __________________________________;\niAnteil = _________________________________;\n\n// D-Anteil\naenderung = ______________________________;\ndAnteil = _________________________________;\n\n// PID-Ausgang\nkorrektur = _______________________________;\n\nalteRegelabweichung = _____________________;
+
+// Motoransteuerung (vorgegeben)
+analogWrite(pwmLinks, constrain(grundGeschwindigkeit + korrektur, 0, 255));
+analogWrite(pwmRechts, constrain(grundGeschwindigkeit - korrektur, 0, 255));`,
+ solution:`regelabweichung = sollAbstand - abstand;\nyP = Kp * regelabweichung;\nsumme = summe + regelabweichung * dt;\nyI = Ki * summe;\naenderung = (regelabweichung - alteRegelabweichung) / dt;\nyD = Kd * aenderung;\nkorrektur = yP + yI + yD;\nalteRegelabweichung = regelabweichung;`,
+ hint1:'Baue den PID-Regler aus den drei bereits bekannten Programmteilen P, I und D zusammen.',
+ pap:['Istwert messen','Regelabweichung bestimmen','P-Anteil berechnen','I-Anteil berechnen','D-Anteil berechnen','P + I + D addieren','Stellgröße ausgeben'],
+ codeHint:'korrektur = yP + yI + yD;',
+ mcq:{q:'Welche Aussage fasst PID am besten zusammen?',opts:['P betrachtet jetzt, I die Vergangenheit und D die Änderung.','P, I und D sind drei Namen für denselben Rechenschritt.','Nur D ist für die Genauigkeit zuständig.'],correct:0},
+ evalQ:'Welche Zielkonflikte entstehen beim Einstellen von Kp, Ki und Kd?',solutionText:'Eine sehr starke Reaktion kann die Regelung schnell machen, aber auch Schwingungen verursachen. I beseitigt bleibende Fehler, kann aber Überschwingen fördern. D kann dämpfen, reagiert jedoch empfindlich auf Messrauschen. Die Faktoren müssen deshalb gemeinsam abgestimmt werden.',
+ params:{kp:.50,ki:.01,kd:1.80},nextProblem:'Jetzt muss der in der Simulation entwickelte PID-Regler auf den echten Roboter übertragen und dort neu abgestimmt werden.'
+},
+{
+ id:'praxis',short:'Praxis',title:'Praxisprojekt: PID am echten Roboter',subtitle:'Von der Simulation zum realen technischen System.',
+ problem:'Programmiert den echten Wandfahrroboter so, dass er möglichst stabil 20 cm Abstand zur Wand hält. Übertragt euren PID-Regler und optimiert Kp, Ki und Kd experimentell.',
+ everydayTitle:'Vom Modell zur Realität',icon:'🤖',everyday:'Die Simulation ist ein Modell. Im echten System kommen Motorunterschiede, Reibung, Akkuspannung, Messrauschen, Ultraschallreflexionen und Verzögerungen hinzu. Deshalb müssen die Parameter am realen Roboter neu abgestimmt werden.',
+ everydayQ:'Nenne zwei Gründe, warum die Simulationsparameter am echten Roboter nicht exakt passen müssen.',formula:'Ziel: schnell + genau + stabil',
+ code:`// Übertragt euren PID-Regler aus der vorherigen Seite.\n\nfloat Kp = ______;\nfloat Ki = ______;\nfloat Kd = ______;\n\n// PID-Regler hier einfügen:\n\n\n\n`,
+ solution:`// Die konkreten optimalen Werte hängen vom realen Roboter ab.\n// Ausgangspunkt z. B.:\nfloat Kp = 0.50;\nfloat Ki = 0.01;\nfloat Kd = 1.80;\n\n// Werte aus der Simulation sind nur ein Startpunkt.\n// Anschließend am realen Roboter experimentell optimieren.`,
+ hint1:'Übernehmt zuerst den funktionierenden PID-Code. Verändert anschließend immer nur einen Parameter und dokumentiert die Wirkung.',
+ pap:['Roboter aufbauen','PID-Code übertragen','Startwerte festlegen','Testfahrt durchführen','Messwerte beobachten','Parameter gezielt verändern','erneut testen','beste Einstellung dokumentieren'],
+ codeHint:'Verändert beim Abstimmen nicht alle drei Faktoren gleichzeitig.',
+ mcq:{q:'Warum ist erneutes Abstimmen am realen Roboter nötig?',opts:['Weil reale Systeme vom Simulationsmodell abweichen.','Weil ein PID-Regler in Simulationen nicht funktioniert.','Weil der Ultraschallsensor keinen Abstand messen kann.'],correct:0},
+ evalQ:'Beschreibe euer Vorgehen, mit dem ihr die PID-Parameter am realen Roboter systematisch optimieren wollt.',solutionText:'Zunächst geeignete Startwerte verwenden, dann jeweils nur einen Parameter verändern, Wirkung auf Schnelligkeit, Überschwingen und bleibende Abweichung beobachten, Werte dokumentieren und schrittweise verbessern.',
+ params:{kp:.50,ki:.01,kd:1.80},nextProblem:'Abschluss erreicht.'
+}
+];
+
+
+const variableLegends={
+  zp:[
+    ['w / Sollwert','gewünschter Wandabstand; in der Simulation 20 cm'],
+    ['x / Istwert','vom Ultraschallsensor gemessener aktueller Wandabstand'],
+    ['Hysterese','Bereich um den Sollwert, in dem der Regler seinen Stellzustand beibehält'],
+    ['y / Stellgröße','Lenkkorrektur durch unterschiedliche Motordrehzahlen']
+  ],
+  p:[
+    ['e','Regelabweichung; e = w − x'],
+    ['w','Führungsgröße bzw. Sollwert; gewünschter Wandabstand'],
+    ['x','Regelgröße bzw. Istwert; gemessener Wandabstand'],
+    ['Kₚ','Proportionalitätsfaktor; bestimmt die Stärke der P-Reaktion'],
+    ['y<sub>P</sub>','P-Anteil der Stellgröße bzw. Lenkkorrektur']
+  ],
+  i:[
+    ['e','Regelabweichung; e = w − x'],
+    ['Kᵢ','Integralfaktor; bestimmt die Stärke der I-Reaktion'],
+    ['Σ','Summe der bisherigen Beiträge'],
+    ['Δt','Zeit zwischen zwei Berechnungsschritten'],
+    ['y<sub>I</sub>','I-Anteil der Stellgröße; berücksichtigt die Fehler der Vergangenheit']
+  ],
+  pi:[
+    ['e','Regelabweichung; e = w − x'],
+    ['Kₚ','Proportionalitätsfaktor des P-Anteils'],
+    ['Kᵢ','Integralfaktor des I-Anteils'],
+    ['Σ(e · Δt)','aufsummierte Regelabweichung über die Zeit'],
+    ['PI','gemeinsame Stellgröße aus P- und I-Anteil']
+  ],
+  d:[
+    ['e','aktuelle Regelabweichung'],
+    ['Δe','Änderung der Regelabweichung seit dem vorherigen Berechnungsschritt'],
+    ['Δt','Zeit zwischen zwei Berechnungsschritten'],
+    ['K<sub>D</sub>','Differenzialfaktor; bestimmt die Stärke der D-Reaktion'],
+    ['y<sub>D</sub>','D-Anteil der Stellgröße; reagiert auf die Änderungsgeschwindigkeit des Fehlers']
+  ],
+  pid:[
+    ['e','Regelabweichung; e = w − x'],
+    ['Kₚ','Proportionalitätsfaktor für den aktuellen Fehler'],
+    ['Kᵢ','Integralfaktor für die aufsummierten Fehler'],
+    ['K<sub>D</sub>','Differenzialfaktor für die Änderungsgeschwindigkeit des Fehlers'],
+    ['Σ(e · Δt)','aufsummierte Regelabweichung über die Zeit'],
+    ['Δe / Δt','Änderungsgeschwindigkeit der Regelabweichung'],
+    ['y','Gesamtstellgröße aus y<sub>P</sub>, y<sub>I</sub> und y<sub>D</sub>']
+  ],
+  praxis:[
+    ['Kₚ','experimentell einzustellender Proportionalitätsfaktor'],
+    ['Kᵢ','experimentell einzustellender Integralfaktor'],
+    ['K<sub>D</sub>','experimentell einzustellender Differenzialfaktor'],
+    ['Ziel','schnelle, genaue und stabile Wandfahrt mit möglichst wenig Schwingen']
+  ]
+};
+function variableLegendHTML(id){
+  const rows=variableLegends[id]||[];
+  if(!rows.length)return '';
+  return `<div class="varLegend"><div class="varLegendTitle">Bedeutung der Größen</div>${rows.map(r=>`<div class="varRow"><div class="varSymbol">${r[0]}</div><div class="varMeaning">${r[1]}</div></div>`).join('')}</div>`;
+}
+
+
+const checkpointFeedback={
+ zp:{explain:'Die Hysterese legt zwei Schaltgrenzen fest. Innerhalb dieses Bereichs bleibt der bisherige Stellzustand erhalten, damit der Regler nicht bei kleinsten Schwankungen ständig umschaltet.',merke:'Hysterese = Bereich ohne sofortiges Umschalten.',hint:'Überlege, was zwischen oberer und unterer Schaltgrenze passieren soll.'},
+ p:{explain:'Beim P-Regler gilt yₚ = Kₚ · e. Wird Kp größer, erzeugt derselbe Fehler eine größere Stellwirkung.',merke:'P reagiert auf die Größe des aktuellen Fehlers.',hint:'Sieh dir die Formel yₚ = Kₚ · e an: Welcher Faktor verstärkt e?'},
+ i:{explain:'Der I-Regler summiert Regelabweichungen über die Zeit. Auch ein kleiner, dauerhaft vorhandener Fehler wächst so zu einer wirksamen Stellgröße an.',merke:'I reagiert darauf, wie lange ein Fehler schon besteht.',hint:'Was passiert mit einer Summe, wenn immer wieder ein kleiner Wert mit gleichem Vorzeichen addiert wird?'},
+ pi:{explain:'Der P-Anteil reagiert sofort auf den aktuellen Fehler. Der I-Anteil sammelt Restfehler auf und kann sie langfristig beseitigen.',merke:'PI kombiniert schnelle Reaktion und genaue Ausregelung.',hint:'Erinnere dich an die jeweilige Stärke von P und I.'},
+ d:{explain:'Bei konstantem Fehler ist die Änderung Δe/Δt gleich null. Deshalb liefert ein reiner D-Anteil dann kein dauerhaftes Stellsignal.',merke:'D reagiert auf die Änderung des Fehlers, nicht auf einen konstanten Fehler.',hint:'Was passiert mit Δe, wenn sich die Regelabweichung gar nicht mehr ändert?'},
+ pid:{explain:'P nutzt den aktuellen Fehler, I berücksichtigt die Fehlergeschichte und D die Änderungsgeschwindigkeit. Gemeinsam bestimmen sie die Stellgröße.',merke:'PID = Gegenwart + Vergangenheit + Änderung.',hint:'Ordne P, I und D noch einmal den drei Informationsarten zu.'},
+ praxis:{explain:'Die Simulation bildet reale Einflüsse nur vereinfacht ab. Motorunterschiede, Reibung, Akkuspannung, Sensorrauschen und Verzögerungen verändern das reale Verhalten.',merke:'Reglerparameter müssen zur realen Regelstrecke passen.',hint:'Vergleiche Modell und reales System: Welche Einflüsse fehlen in der Simulation?'}
+};
+
+const taskFeedbackData={
+ zp:{
+  everyday:{keywords:['hysterese','schalt','schwank','ein','aus','verschlei','ständig'],good:'Genau. Die Hysterese verhindert, dass das Bügeleisen bei kleinsten Temperaturschwankungen ständig ein- und ausschaltet.',partial:'Die Grundidee stimmt. Ergänze noch, dass zwischen zwei Schaltgrenzen der bisherige Zustand beibehalten wird.',hint:'Denke daran, was passieren würde, wenn Ein- und Ausschalten beide exakt bei derselben Temperatur erfolgen.',merke:'Die Hysterese schafft einen Bereich, in dem nicht sofort umgeschaltet wird.'},
+  eval:{keywords:['zwei','stell','umschalt','träg','übersch','schwing','hysterese'],good:'Passt gut. Entscheidend sind die zwei festen Stellzustände und das Überschreiten der Schaltgrenzen.',partial:'Du beschreibst die Korrektur richtig. Ergänze noch, warum der Roboter den Sollabstand immer wieder über- bzw. unterschreitet.',hint:'Welche zwei Stellzustände kennt der Regler und was passiert beim Erreichen einer Schaltgrenze?',merke:'Hysterese reduziert häufiges Schalten, beseitigt das Schwingen aber nicht grundsätzlich.'}
+ },
+ p:{
+  everyday:{keywords:['halb','klein','proportional','stell','kp'],good:'Richtig. Bei gleichem Kₚ halbiert sich auch der P-Anteil der Stellgröße, wenn sich die Regelabweichung halbiert.',partial:'Die Richtung stimmt. Formuliere noch den proportionalen Zusammenhang zwischen Regelabweichung und Stellgröße.',hint:'Sieh dir yₚ = Kₚ · e an. Was passiert mit dem Produkt, wenn e halbiert wird?',merke:'Beim P-Regler ist yₚ proportional zur aktuellen Regelabweichung.'},
+  eval:{keywords:['null','stell','fehler','abweich','kp','p-anteil','yp'],good:'Passt gut. Bei e = 0 ist yₚ = 0. Benötigt die Strecke aber dauerhaft eine Stellwirkung, stellt sich deshalb ein kleiner Restfehler ein.',partial:'Du hast den Restfehler erkannt. Ergänze noch, was mit dem P-Anteil bei e = 0 passiert.',hint:'Setze e = 0 in yₚ = Kₚ · e ein.',merke:'Ein P-Regler kann bei vielen Regelstrecken eine bleibende Regelabweichung benötigen.'}
+ },
+ i:{
+  everyday:{keywords:['sum','größer','wächst','add','zeit','fehler'],good:'Richtig. Ein gleichgerichteter Fehler wird immer weiter aufsummiert. Dadurch wächst yᵢ mit der Zeit.',partial:'Die Idee stimmt. Beschreibe noch, dass der Fehler bei jedem Zeitschritt zur bisherigen Summe addiert wird.',hint:'Was passiert mit einer Summe, wenn immer wieder ein positiver Wert addiert wird?',merke:'Der I-Anteil berücksichtigt die Fehlergeschichte.'},
+  eval:{keywords:['sum','weiter','übersch','verzöger','integral','sollwert'],good:'Passt gut. Die Fehlersumme ist am Sollwert nicht schlagartig null, daher wirkt yᵢ noch weiter und kann Überschwingen verursachen.',partial:'Du nennst das Überschwingen. Ergänze noch, warum der I-Anteil am Sollwert nicht sofort verschwindet.',hint:'Was geschieht mit der bereits aufgebauten Fehlersumme, wenn e plötzlich 0 wird?',merke:'Der I-Anteil besitzt ein Gedächtnis und kann deshalb nachwirken.'}
+ },
+ pi:{
+  everyday:{keywords:['p','schnell','i','fehler','rest','genau'],good:'Richtig. P sorgt für die schnelle Reaktion, I beseitigt einen länger bestehenden Restfehler.',partial:'Ein Anteil ist richtig beschrieben. Ergänze die unterschiedliche Aufgabe des jeweils anderen Anteils.',hint:'P betrachtet den aktuellen Fehler. I betrachtet die aufsummierten Fehler.',merke:'PI verbindet schnelle Reaktion mit genauer Ausregelung.'},
+  eval:{keywords:['schnell','rest','abweich','i','p','soll'],good:'Passt gut. Der PI-Regler reagiert zunächst schnell und kann durch den I-Anteil den verbleibenden Fehler abbauen.',partial:'Du beschreibst einen Unterschied. Ergänze noch die Wirkung des I-Anteils auf eine bleibende Regelabweichung.',hint:'Vergleiche besonders den Endwert der beiden Kurven.',merke:'PI kann den bleibenden Fehler des P-Reglers beseitigen.'}
+ },
+ d:{
+  everyday:{keywords:['änder','schnell','annäher','geschwindigkeit','abstand','trend'],good:'Richtig. Derselbe Abstand kann unterschiedlich kritisch sein, je nachdem wie schnell er sich gerade verändert.',partial:'Der aktuelle Abstand ist genannt. Ergänze die Information über seine Änderung pro Zeit.',hint:'Vergleiche zwei Fahrzeuge mit 30 m Abstand: eines hält den Abstand, das andere nähert sich schnell.',merke:'Der D-Anteil reagiert auf die Änderungsgeschwindigkeit der Regelabweichung.'},
+  eval:{keywords:['dämpf','änder','schnell','übersch','gegensteuer','ruhe'],good:'Passt gut. y_D reagiert früh auf schnelle Änderungen und kann dadurch Überschwingen dämpfen.',partial:'Du beschreibst eine Wirkung. Ergänze noch, dass der D-Anteil auf Δe/Δt und nicht auf einen konstanten Fehler reagiert.',hint:'Welche Größe steht in der D-Gleichung im Zähler?',merke:'D wirkt vorausschauend im Sinn einer Dämpfung, kann aber allein keinen konstanten Fehler ausregeln.'}
+ },
+ pid:{
+  everyday:{keywords:['p','i','d','aktuell','dauer','änder','höhe','schnell'],good:'Sehr gut. Du ordnest P dem aktuellen Fehler, I der Fehlergeschichte und D der Änderungsgeschwindigkeit zu.',partial:'Mindestens zwei Anteile sind erkennbar. Ergänze die Aufgabe des fehlenden Anteils.',hint:'P = jetzt, I = Vergangenheit, D = Änderung.',merke:'PID nutzt drei unterschiedliche Informationen über die Regelabweichung.'},
+  eval:{keywords:['schnell','schwing','übersch','genau','rausch','kp','ki','kd'],good:'Passt gut. Die Parameter beeinflussen Schnelligkeit, Genauigkeit, Schwingneigung und Empfindlichkeit gemeinsam.',partial:'Du nennst einen Zielkonflikt. Ergänze mindestens noch einen zweiten, z. B. Schnelligkeit gegen Schwingneigung.',hint:'Was passiert typischerweise bei sehr großem Kₚ, Kᵢ oder K_D?',merke:'PID-Abstimmung ist immer ein Kompromiss zwischen mehreren Qualitätskriterien.'}
+ },
+ praxis:{
+  everyday:{keywords:['real','modell','reibung','motor','sensor','akku','unterschied'],good:'Richtig. Ein reales System enthält Einflüsse, die das Simulationsmodell nur vereinfacht oder gar nicht abbildet.',partial:'Die Richtung stimmt. Nenne mindestens einen konkreten realen Einfluss, z. B. Reibung, Motorunterschiede oder Sensorrauschen.',hint:'Welche Dinge können beim echten Roboter schwanken, die in einer Simulation idealisiert sind?',merke:'Ein Modell ist hilfreich, aber Reglerparameter müssen an die reale Regelstrecke angepasst werden.'},
+  eval:{keywords:['parameter','einzeln','verändern','dokument','testen','kp','ki','kd'],good:'Sehr gut. Systematisches Abstimmen bedeutet: Startwerte wählen, immer nur einen Parameter verändern, Wirkung beobachten und dokumentieren.',partial:'Du hast einen sinnvollen Testschritt. Ergänze noch, dass die Parameter möglichst einzeln verändert und die Ergebnisse dokumentiert werden sollten.',hint:'Wie könnt ihr sicher erkennen, welcher Parameter eine beobachtete Änderung verursacht hat?',merke:'Beim Abstimmen immer kontrolliert und dokumentiert vorgehen.'}
+ }
+};
+
+const taskHelpData={
+ zp:{everyday:['Überlege, warum häufiges Ein- und Ausschalten ungünstig wäre.','Beim Bügeleisen werden eine obere und eine untere Schaltgrenze verwendet.','Satzanfang: „Die Hysterese ist sinnvoll, weil …“'],prediction:['Der Zweipunktregler kennt nur zwei feste Stellzustände.','Überlege, was beim Überschreiten der oberen bzw. unteren Schaltgrenze passiert.','Erwarte eine Kurve, die den Sollwert wiederholt über- und unterschreitet.'],eval:['Beschreibe zuerst die zwei Stellzustände.','Beziehe anschließend Trägheit bzw. Überschreiten der Schaltgrenzen ein.','Satzanfang: „Der Roboter schwingt um den Sollwert, weil …“']},
+ p:{everyday:['Betrachte die Gleichung yₚ = Kₚ · e.','Kₚ bleibt gleich; nur e wird halbiert.','Satzanfang: „Wenn e halbiert wird, dann …“'],prediction:['Bei großem Fehler ist die Korrektur groß.','Je näher der Istwert an den Sollwert kommt, desto kleiner wird yₚ.','Zeichne eine Annäherung an den Sollwert, deren Änderung zunehmend kleiner wird.'],eval:['Setze e = 0 in die P-Gleichung ein.','Überlege, ob die Regelstrecke möglicherweise trotzdem eine Stellwirkung benötigt.','Satzanfang: „Bei e = 0 gilt yₚ = …, deshalb …“']},
+ i:{everyday:['Denke an eine Summe, zu der immer wieder derselbe kleine Fehler addiert wird.','Die Fehlersumme wächst mit der Dauer des Fehlers.','Satzanfang: „Je länger der Fehler besteht, desto …“'],prediction:['Der I-Anteil baut sich erst mit der Zeit auf.','Er kann weiterwirken, wenn der Sollwert bereits erreicht wurde.','Zeichne eine eher langsame Reaktion mit möglichem Überschwingen.'],eval:['Was passiert mit der gespeicherten Summe bei e = 0?','Die Summe wird nicht automatisch sofort 0.','Satzanfang: „Der I-Regler kann überschwingen, weil …“']},
+ pi:{everyday:['Erinnere dich an die Stärken von P und I.','P reagiert sofort, I sammelt Restfehler auf.','Satzanfang: „P sorgt für …, I sorgt für …“'],prediction:['Kombiniere die typische schnelle P-Reaktion mit der langfristigen I-Wirkung.','Achte besonders darauf, ob am Ende ein Restfehler bleibt.','Zeichne eine relativ schnelle Annäherung, die langfristig den Sollwert erreicht.'],eval:['Vergleiche Anfang und Ende der Kurven getrennt.','P bestimmt stark den Start, I den langfristigen Restfehler.','Satzanfang: „Im Vergleich zum P-Regler …“']},
+ d:{everyday:['Nicht nur der Abstand selbst ist wichtig.','Betrachte zusätzlich, wie schnell sich der Abstand verändert.','Satzanfang: „Der aktuelle Abstand allein reicht nicht, weil …“'],prediction:['Ein reiner D-Anteil reagiert nur bei Änderung.','Bei konstantem Fehler wird Δe/Δt = 0.','Erwarte keine selbstständige dauerhafte Ausregelung auf den Sollwert.'],eval:['Denke an Δe/Δt.','Schnelle Änderungen erzeugen eine starke D-Reaktion.','Satzanfang: „Der D-Anteil kann Überschwingen dämpfen, indem …“']},
+ pid:{everyday:['Ordne jedem Anteil eine Zeitperspektive zu.','P = aktueller Fehler, I = Vergangenheit, D = Änderung.','Formuliere für die Drohne je einen Satz zu P, I und D.'],prediction:['PID kombiniert die bisher beobachteten Wirkungen.','Ein gut eingestellter PID soll schnell sein und wenig überschwingen.','Zeichne eine schnelle, gedämpfte Annäherung an den Sollwert.'],eval:['Denke an die Wirkung sehr großer Parameter.','Mehr Reaktion bedeutet nicht automatisch bessere Regelung.','Nenne mindestens zwei Zielkonflikte, z. B. schnell ↔ schwingungsarm.']},
+ praxis:{everyday:['Vergleiche Simulation und reales System.','Nenne reale Einflüsse auf Sensor, Motoren oder Mechanik.','Beispiel: Reibung und Motorunterschiede verändern die Fahrt.'],prediction:['Übertragt eure Erwartungen aus der Simulation auf den echten Roboter.','Rechnet damit, dass die Simulationsparameter nicht exakt passen.','Notiert vor dem Test, welche Abweichungen ihr erwartet.'],eval:['Plant ein systematisches Vorgehen.','Verändert möglichst immer nur einen Parameter gleichzeitig.','Startwerte → testen → einen Parameter ändern → Wirkung dokumentieren → wiederholen.']}
+};
+
+function taskHelpHTML(s,kind){
+ let h=taskHelpData[s.id]&&taskHelpData[s.id][kind];
+ if(!h&&kind==='checkpoint'){const fb=checkpointFeedback[s.id];h=[fb.hint,'Nutze zusätzlich die mathematische Beschreibung und deine Beobachtung aus der Simulation.','Schließe zuerst offensichtlich falsche Antwortmöglichkeiten aus und begründe die verbleibende Aussage mit einem Fachbegriff.']}
+ if(!h&&kind==='simulation')h=['Beobachte zuerst nur den Fahrtweg des Roboters.','Vergleiche anschließend Istwertkurve und Sollwertlinie.','Nutze danach die Störung oder verändere einen Reglerparameter und beschreibe die Änderung.'];
+ h=h||['Lies die Aufgabenstellung noch einmal und markiere die gesuchte Größe.','Nutze Formel, Diagramm oder Programmablaufplan der Seite.','Formuliere zunächst einen einfachen Satz und ergänze danach die Fachbegriffe.'];
+ return `<div class="taskHints" data-stageid="${s.id}" data-helpkind="${kind}">${h.map((x,i)=>`<div class="taskHint ${i>0?'locked':''}" data-level="${i}"><button type="button">${'💡'.repeat(i+1)} Hilfe ${i+1}${i===0?' – Denkanstoß':i===1?' – Strukturhilfe':' – starke Hilfe'}</button><div class="taskHintContent">${x}</div></div>`).join('')}</div>`;
+}
+function bindTaskHints(root=document){
+ root.querySelectorAll('.taskHints').forEach(group=>{const hs=[...group.querySelectorAll('.taskHint')];const sid=group.dataset.stageid;const kind=group.dataset.helpkind;hs.forEach((h,i)=>{h.querySelector('button').onclick=()=>{if(h.classList.contains('locked'))return;h.classList.toggle('open');if(h.classList.contains('open')){if(sid&&state[sid]){state[sid].helpOpened=state[sid].helpOpened||{};state[sid].helpOpened[kind]=state[sid].helpOpened[kind]||[];if(!state[sid].helpOpened[kind].includes(i))state[sid].helpOpened[kind].push(i);save()}if(i+1<hs.length)hs[i+1].classList.remove('locked')}}});
+  // Bereits geöffnete Hilfen nach einem erneuten Rendern wieder freischalten.
+  const opened=(sid&&state[sid]&&state[sid].helpOpened&&state[sid].helpOpened[kind])||[];opened.forEach(i=>{if(hs[i]){hs[i].classList.remove('locked');if(i+1<hs.length)hs[i+1].classList.remove('locked')}})
+ });
+ // Die besonderen Code-Hilfen benutzen dieselbe Logik, enthalten aber PAP/Codeblöcke.
+ root.querySelectorAll('.hints[data-helpkind="code"]').forEach(group=>{const sid=group.dataset.stageid;const hs=[...group.querySelectorAll('.hint')];hs.forEach((h,i)=>{const b=h.querySelector('button');b.onclick=()=>{if(h.classList.contains('locked'))return;h.classList.toggle('open');if(h.classList.contains('open')){const ss=state[sid];ss.helpOpened=ss.helpOpened||{};ss.helpOpened.code=ss.helpOpened.code||[];if(!ss.helpOpened.code.includes(i))ss.helpOpened.code.push(i);save();if(i+1<hs.length)hs[i+1].classList.remove('locked')}}});const opened=(state[sid]?.helpOpened?.code)||[];opened.forEach(i=>{if(hs[i]){hs[i].classList.remove('locked');if(i+1<hs.length)hs[i+1].classList.remove('locked')}})});
+}
+
+
+function allHelpSeen(ss,kind){return new Set((ss.helpOpened&&ss.helpOpened[kind])||[]).size>=3}
+function registerFailedAttempt(s,ss,kind){
+ if(!allHelpSeen(ss,kind))return false;
+ ss.failAfterHelp=ss.failAfterHelp||{};ss.failAfterHelp[kind]=(ss.failAfterHelp[kind]||0)+1;
+ if(ss.failAfterHelp[kind]>=1){ss.solutionAvailable=ss.solutionAvailable||{};ss.solutionAvailable[kind]=true;save();refreshSolutionGate(s,ss,kind);return true}
+ save();return false;
+}
+function solutionForKind(s,kind){
+ if(kind==='everyday')return teacherEverydaySolution(s.id);
+ if(kind==='eval')return s.solutionText;
+ if(kind==='checkpoint')return `<b>Richtige Antwort:</b> ${escapeHTML(s.mcq.opts[s.mcq.correct])}<br>${checkpointFeedback[s.id].explain}`;
+ if(kind==='code')return `<b>Vollständiger Lösungscode:</b><pre>${escapeHTML(fullSketchFor(s.id))}</pre>`;
+ return '';
+}
+function refreshSolutionGate(s,ss,kind){
+ const gate=document.getElementById(kind+'SolutionGate');if(!gate)return;
+ const available=teacherMode||!!(ss.solutionAvailable&&ss.solutionAvailable[kind]);
+ gate.classList.toggle('show',available);if(!available)return;
+ const btn=gate.querySelector('.showSolutionBtn'),reveal=gate.querySelector('.solutionReveal');
+ if(ss.usedSolution&&ss.usedSolution[kind]){gate.classList.add('revealed');if(reveal)reveal.innerHTML=solutionForKind(s,kind);if(btn)btn.style.display='none'}
+ if(btn)btn.onclick=()=>{ss.usedSolution=ss.usedSolution||{};ss.usedSolution[kind]=true;gate.classList.add('revealed');reveal.innerHTML=solutionForKind(s,kind);btn.style.display='none';save()};
+}
+function solutionGateHTML(kind){return `<div id="${kind}SolutionGate" class="solutionGate"><b>Alle drei Hilfen genutzt – und noch unsicher?</b><p>Du kannst jetzt die Musterlösung anzeigen und anschließend mit deiner eigenen Lösung vergleichen.</p><button type="button" class="showSolutionBtn">Lösung anzeigen</button><div class="solutionReveal"></div></div>`}
+const semanticRules={
+  zp:{
+    everyday:{minGood:1,concepts:[
+      ['nicht staendig','nicht dauernd','weniger schalten','seltener schalten','haeufiges schalten','ein und aus','staendig ein','verschleiss'],
+      ['hysterese','schaltgrenz','oberer grenz','unterer grenz','bereich um den sollwert','zwischen den grenz']
+    ]},
+    eval:{minGood:2,concepts:[
+      ['zwei stell','zwei zustaend','links oder rechts','entweder links','feste stell','nur zwei'],
+      ['umschalt','schaltgrenz','zu nah','zu weit','oberhalb','unterhalb'],
+      ['schwing','zickzack','ueberschreit','ueberschwing','traeg']
+    ]}
+  },
+  p:{
+    everyday:{minGood:1,concepts:[
+      ['halbiert','halb so gross','halb so stark','wird halb','50 prozent'],
+      ['proportional','im gleichen verhaeltnis']
+    ],partialConcepts:[['kleiner','nimmt ab','weniger','schwaecher']]},
+    eval:{minGood:1,concepts:[
+      ['bei e 0','e gleich 0','e ist 0','fehler 0','regelabweichung 0','yp 0','stellgroesse 0','keine stellwirkung','kein signal'],
+      ['restfehler','bleibende abweich','offset','kleine abweichung bleibt','sollwert nicht ganz']
+    ]}
+  },
+  i:{
+    everyday:{minGood:1,concepts:[
+      ['summe waechst','summe wird groesser','wird immer groesser','addiert sich','aufsummiert','sammelt sich','steigt mit der zeit'],
+      ['laenger der fehler','je laenger','dauer des fehlers']
+    ]},
+    eval:{minGood:1,concepts:[
+      ['summe bleibt','summe ist nicht null','gespeicherte summe','wirkt weiter','nachwirkung','gedaechtnis'],
+      ['ueberschwing','ueber den sollwert','zu weit weiter']
+    ]}
+  },
+  pi:{
+    everyday:{minGood:2,concepts:[
+      ['p schnell','p reagiert schnell','p aktuell','p moment','p sofort'],
+      ['i restfehler','i beseitigt','i gleicht aus','i vergangen','i summiert','i langfristig']
+    ]},
+    eval:{minGood:2,concepts:[
+      ['schnell','schneller','rasche reaktion','p anteil'],
+      ['kein restfehler','beseitigt rest','sollwert erreicht','keine bleibende','i anteil']
+    ]}
+  },
+  d:{
+    everyday:{minGood:1,concepts:[
+      ['wie schnell','aenderung des abstands','abstand aendert','annaeherungsgeschwindigkeit','relativgeschwindigkeit','kommt schnell naeher','trend'],
+      ['aenderung pro zeit','aenderungsgeschwindigkeit']
+    ]},
+    eval:{minGood:1,concepts:[
+      ['daempf','bremst','gegensteuer','weniger ueberschwing','verhindert ueberschwing','beruhigt'],
+      ['aenderungsgeschwindigkeit','delta e','aenderung des fehlers','schnelle aenderung']
+    ]}
+  },
+  pid:{
+    everyday:{minGood:3,concepts:[
+      ['p aktuell','p jetzt','p moment','p fehler'],
+      ['i vergangen','i summe','i dauerhaft','i restfehler','i sammelt'],
+      ['d aenderung','d schnell','d geschwindigkeit','d daempf']
+    ]},
+    eval:{minGood:2,concepts:[
+      ['schnell','reaktionszeit','kp'],
+      ['genau','restfehler','ki','sollwert'],
+      ['schwing','ueberschwing','stabil','kd','rauschen']
+    ]}
+  },
+  praxis:{
+    everyday:{minGood:2,concepts:[
+      ['reibung','boden','mechanik'],
+      ['motorunterschied','unterschiedliche motor','motor schwach'],
+      ['sensorrausch','messfehler','ultraschall','sensor'],
+      ['akku','batterie','spannung'],
+      ['verzoeger','traegheit','modell vereinfacht']
+    ]},
+    eval:{minGood:2,concepts:[
+      ['ein parameter','einzeln veraender','nur kp','nur ki','nur kd'],
+      ['testen','versuch','ausprobieren'],
+      ['dokument','notieren','messwerte','vergleich'],
+      ['startwert','schrittweise','systematisch']
+    ]}
+  }
+};
+
+function normalizeMeaningText(text){
+  return (text||'').toLowerCase()
+    .replace(/ß/g,'ss').replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+    .replace(/[–—−]/g,'-').replace(/[^a-z0-9%+\-\s]/g,' ')
+    .replace(/\s+/g,' ').trim();
+}
+function conceptMatched(norm,aliases){
+  return aliases.some(a=>norm.includes(normalizeMeaningText(a)));
+}
+function countConcepts(norm,groups){
+  return (groups||[]).reduce((n,g)=>n+(conceptMatched(norm,g)?1:0),0);
+}
+
+function scoreFreeText(id,kind,text){
+ const cfg=taskFeedbackData[id]&&taskFeedbackData[id][kind];
+ if(!cfg)return {level:'partial',msg:'Antwort gespeichert.'};
+
+ const raw=(text||'').trim();
+ const norm=normalizeMeaningText(raw);
+ if(raw.length<3)return {level:'bad',msg:'Notiere zunächst deine Überlegung. '+cfg.hint};
+
+ const rule=semanticRules[id]&&semanticRules[id][kind];
+ if(rule){
+   const hits=countConcepts(norm,rule.concepts);
+   const partialHits=countConcepts(norm,rule.partialConcepts||[]);
+   const minGood=rule.minGood||1;
+
+   // Der Sinn zählt: Eine passende sinngleiche Aussage reicht, auch wenn sie kurz formuliert ist.
+   if(hits>=minGood)return {level:'good',msg:cfg.good,merke:cfg.merke};
+
+   // Bei komplexeren Fragen sind bereits erkannte Teilaspekte ausdrücklich "teilweise richtig".
+   if(hits>0 || partialHits>0)return {level:'partial',msg:cfg.partial};
+
+   // Zusätzlicher toleranter Fallback über Fachwortstämme aus der bisherigen Musterlogik.
+   const keywordHits=(cfg.keywords||[]).filter(k=>norm.includes(normalizeMeaningText(k))).length;
+   if(keywordHits>=2)return {level:'good',msg:cfg.good,merke:cfg.merke};
+   if(keywordHits===1)return {level:'partial',msg:cfg.partial};
+
+   return {level:'bad',msg:cfg.hint};
+ }
+
+ const keywordHits=(cfg.keywords||[]).filter(k=>norm.includes(normalizeMeaningText(k))).length;
+ if(keywordHits>=2)return {level:'good',msg:cfg.good,merke:cfg.merke};
+ if(keywordHits===1)return {level:'partial',msg:cfg.partial};
+ return {level:'bad',msg:cfg.hint};
+}
+function showTaskFeedback(el,res){el.className='taskFeedback show '+res.level;el.innerHTML=`<b>${res.level==='good'?'✓ Passt gut.':res.level==='partial'?'△ Teilweise richtig.':'↻ Überarbeite deine Antwort.'}</b> ${res.msg}${res.merke?`<span class="merke">Merke: ${res.merke}</span>`:''}`}
+
+
+function fullSketchFor(id){
+ const commonStart=`// Wandfahrt mit HC-SR04 und Motortreiber
+int trigPin = 7;
+int echoPin = 8;
+
+int links1 = 2;
+int links2 = 3;
+int pwmLinks = 5;
+int rechts1 = 4;
+int rechts2 = 9;
+int pwmRechts = 6;
+
+float sollAbstand = 20;
+float abstand;
+long dauer;
+int grundGeschwindigkeit = 120;
+`;
+ const setup=`
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  pinMode(links1, OUTPUT);
+  pinMode(links2, OUTPUT);
+  pinMode(rechts1, OUTPUT);
+  pinMode(rechts2, OUTPUT);
+  pinMode(pwmLinks, OUTPUT);
+  pinMode(pwmRechts, OUTPUT);
+
+  // Beide Motoren vorwärts
+  digitalWrite(links1, HIGH);
+  digitalWrite(links2, LOW);
+  digitalWrite(rechts1, HIGH);
+  digitalWrite(rechts2, LOW);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Abstand mit HC-SR04 messen
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  dauer = pulseIn(echoPin, HIGH);
+  abstand = dauer * 0.034 / 2;
+
+`;
+ const end=`
+  Serial.print("Abstand: ");
+  Serial.println(abstand);
+  delay(50);
+}
+`;
+ let vars='',reg='';
+ if(id==='zp'){
+   vars=`int hysterese = 2;
+int pwmLangsam = 80;
+int pwmSchnell = 160;
+`;
+   reg=`  // >>> REGELBLOCK
+  // Zweipunktregler mit Hysterese
+  if (abstand > sollAbstand + hysterese) {
+    analogWrite(pwmLinks, pwmLangsam);
+    analogWrite(pwmRechts, pwmSchnell);
+  }
+  else if (abstand < sollAbstand - hysterese) {
+    analogWrite(pwmLinks, pwmSchnell);
+    analogWrite(pwmRechts, pwmLangsam);
+  }
+  // Innerhalb der Hysterese bleibt der letzte Stellzustand erhalten.
+  // <<< REGELBLOCK
+`;
+ }else if(id==='p'){
+   vars=`float regelabweichung;
+float Kp = 0.8;
+float yP;
+float korrektur;
+`;
+   reg=`  // >>> REGELBLOCK
+  regelabweichung = sollAbstand - abstand;
+  yP = Kp * regelabweichung;
+  korrektur = yP;
+
+  analogWrite(pwmLinks, constrain(grundGeschwindigkeit + korrektur, 0, 255));
+  analogWrite(pwmRechts, constrain(grundGeschwindigkeit - korrektur, 0, 255));
+  // <<< REGELBLOCK
+`;
+ }else if(id==='i'){
+   vars=`float regelabweichung;
+float Ki = 0.18;
+float summe = 0;
+float yI;
+float korrektur;
+float dt = 0.05;
+`;
+   reg=`  // >>> REGELBLOCK
+  regelabweichung = sollAbstand - abstand;
+  summe = summe + regelabweichung * dt;
+  yI = Ki * summe;
+  korrektur = yI;
+
+  analogWrite(pwmLinks, constrain(grundGeschwindigkeit + korrektur, 0, 255));
+  analogWrite(pwmRechts, constrain(grundGeschwindigkeit - korrektur, 0, 255));
+  // <<< REGELBLOCK
+`;
+ }else if(id==='pi'){
+   vars=`float regelabweichung;
+float Kp = 0.75;
+float Ki = 0.14;
+float summe = 0;
+float yP, yI, korrektur;
+float dt = 0.05;
+`;
+   reg=`  // >>> REGELBLOCK
+  regelabweichung = sollAbstand - abstand;
+  yP = Kp * regelabweichung;
+  summe = summe + regelabweichung * dt;
+  yI = Ki * summe;
+  korrektur = yP + yI;
+
+  analogWrite(pwmLinks, constrain(grundGeschwindigkeit + korrektur, 0, 255));
+  analogWrite(pwmRechts, constrain(grundGeschwindigkeit - korrektur, 0, 255));
+  // <<< REGELBLOCK
+`;
+ }else if(id==='d'){
+   vars=`float regelabweichung;
+float alteRegelabweichung = 0;
+float Kd = 0.7;
+float aenderung, yD, korrektur;
+float dt = 0.05;
+`;
+   reg=`  // >>> REGELBLOCK
+  regelabweichung = sollAbstand - abstand;
+  aenderung = (regelabweichung - alteRegelabweichung) / dt;
+  yD = Kd * aenderung;
+  korrektur = yD;
+  alteRegelabweichung = regelabweichung;
+
+  analogWrite(pwmLinks, constrain(grundGeschwindigkeit + korrektur, 0, 255));
+  analogWrite(pwmRechts, constrain(grundGeschwindigkeit - korrektur, 0, 255));
+  // <<< REGELBLOCK
+`;
+ }else{
+   vars=`float regelabweichung;
+float alteRegelabweichung = 0;
+float summe = 0;
+float Kp = 0.50;
+float Ki = 0.01;
+float Kd = 1.80;
+float yP, yI, yD, aenderung, korrektur;
+float dt = 0.05;
+`;
+   reg=`  // >>> REGELBLOCK
+  regelabweichung = sollAbstand - abstand;
+  yP = Kp * regelabweichung;
+  summe = summe + regelabweichung * dt;
+  yI = Ki * summe;
+  aenderung = (regelabweichung - alteRegelabweichung) / dt;
+  yD = Kd * aenderung;
+  korrektur = yP + yI + yD;
+  alteRegelabweichung = regelabweichung;
+
+  analogWrite(pwmLinks, constrain(grundGeschwindigkeit + korrektur, 0, 255));
+  analogWrite(pwmRechts, constrain(grundGeschwindigkeit - korrektur, 0, 255));
+  // <<< REGELBLOCK
+`;
+ }
+ return commonStart+vars+setup+reg+end;
+}
+function studentSketchFor(id){
+ let c=fullSketchFor(id);
+ if(id==='zp'){
+  c=c.replace('if (abstand > sollAbstand + hysterese)', 'if (abstand > __________________________)')
+     .replace('analogWrite(pwmLinks, pwmLangsam);','analogWrite(pwmLinks, ______);')
+     .replace('analogWrite(pwmRechts, pwmSchnell);','analogWrite(pwmRechts, ______);')
+     .replace('else if (abstand < sollAbstand - hysterese)', 'else if (abstand < __________________________)')
+     .replace('analogWrite(pwmLinks, pwmSchnell);','analogWrite(pwmLinks, ______);')
+     .replace('analogWrite(pwmRechts, pwmLangsam);','analogWrite(pwmRechts, ______);');
+ }else if(id==='p'){
+  c=c.replace('regelabweichung = sollAbstand - abstand;','regelabweichung = ______________________________;')
+     .replace('yP = Kp * regelabweichung;','yP = __________________________________________;');
+ }else if(id==='i'){
+  c=c.replace('summe = summe + regelabweichung * dt;','summe = _______________________________________;')
+     .replace('yI = Ki * summe;','yI = __________________________________________;');
+ }else if(id==='pi'){
+  c=c.replace('korrektur = yP + yI;','korrektur = ___________________________________;');
+ }else if(id==='d'){
+  c=c.replace('aenderung = (regelabweichung - alteRegelabweichung) / dt;','aenderung = ___________________________________;')
+     .replace('yD = Kd * aenderung;','yD = __________________________________________;')
+     .replace('alteRegelabweichung = regelabweichung;','alteRegelabweichung = _________________________;');
+ }else{
+  c=c.replace('regelabweichung = sollAbstand - abstand;','regelabweichung = ______________________________;')
+     .replace('yP = Kp * regelabweichung;','yP = __________________________________________;')
+     .replace('summe = summe + regelabweichung * dt;','summe = _______________________________________;')
+     .replace('yI = Ki * summe;','yI = __________________________________________;')
+     .replace('aenderung = (regelabweichung - alteRegelabweichung) / dt;','aenderung = ___________________________________;')
+     .replace('yD = Kd * aenderung;','yD = __________________________________________;')
+     .replace('korrektur = yP + yI + yD;','korrektur = ___________________________________;')
+     .replace('alteRegelabweichung = regelabweichung;','alteRegelabweichung = _________________________;');
+ }
+ return c;
+}
+function numberedCodeHTML(id,onlyReg=false){
+ const code=fullSketchFor(id);const lines=code.split('\n');let inside=false;let visible=[];
+ lines.forEach((line,i)=>{if(line.includes('// >>> REGELBLOCK'))inside=true;const isreg=inside;const key=isreg&&(/regelabweichung\s*=|yP\s*=|yI\s*=|yD\s*=|korrektur\s*=/.test(line));if(!onlyReg||isreg)visible.push({line,i:i+1,isreg,key});if(line.includes('// <<< REGELBLOCK'))inside=false});
+ return visible.map(o=>`<div class="codeLine ${o.isreg?'reg':''} ${o.key?'key':''}"><span class="ln">${o.i}</span><span class="src">${escapeHTML(o.line)}</span></div>`).join('');
+}
+function teacherCodeHTML(id){return `<div class="teacherCodePanel"><div class="teacherCodeHead"><b>Vollständiger Lösungscode mit Zeilennummern</b><div class="teacherCodeToggle"><button data-codeview="full" class="active">Vollständig</button><button data-codeview="reg">Nur Reglerblock</button></div></div><div id="teacherNumberedCode" class="numberedCode">${numberedCodeHTML(id,false)}</div><div class="teacherCodeFoot">Türkis markiert: Reglerblock · gelb hervorgehoben: zentrale Berechnungen. Pinbelegung vor dem Einsatz am realen Roboter prüfen.</div></div>`}
+
+let teacherMode=false,presentationMode=false,current=-1,running=false,animId=null;
+const state=JSON.parse(localStorage.getItem('nitRegelStateV10')||localStorage.getItem('nwtRegelStateV9')||localStorage.getItem('nwtRegelStateV8')||localStorage.getItem('nwtRegelStateV7')||localStorage.getItem('nwtRegelStateV6')||localStorage.getItem('nwtRegelStateV5')||'{}');
+function initStageState(id){if(!state[id]) state[id]={};const d={prediction:false,code:false,sim:false,eval:false,check:false,everyday:'',everydayOk:false,evalText:'',evalOk:false,mcq:'',codeText:'',predPoints:[],checkTries:0,compiled:null,helpOpened:{},failAfterHelp:{},solutionAvailable:{},usedSolution:{},codeCoachSeen:false,timing:null};Object.keys(d).forEach(k=>{if(state[id][k]===undefined)state[id][k]=d[k]});return state[id]}
+stages.forEach(s=>initStageState(s.id));
+function save(){localStorage.setItem('nitRegelStateV10',JSON.stringify(state))}
+function everydayDone(id){return teacherMode||!!state[id].everydayOk}
+function isComplete(id){const s=state[id];return everydayDone(id)&&s.prediction&&s.code&&s.sim&&s.eval&&s.check}
+function unlocked(i){if(teacherMode||i===0)return true;return stages.slice(0,i).every(s=>isComplete(s.id))}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+
+function renderNav(){
+ const nav=document.getElementById('stageNav');nav.innerHTML='';
+ const home=document.createElement('button');home.className='stageBtn'+(current===-1?' active':'');home.textContent='Start';
+ home.onclick=()=>{current=-1;render()};nav.appendChild(home);
+ stages.forEach((s,i)=>{const b=document.createElement('button');b.className='stageBtn'+(i===current?' active':'')+(isComplete(s.id)?' done':'')+(!unlocked(i)?' locked':'');b.textContent=s.short;b.onclick=()=>{if(unlocked(i)){current=i;render()}else toast('Bearbeite zuerst die vorherigen Lernschritte.')};nav.appendChild(b)})
+}
+function progressItems(s){const a=state[s.id];const items=[['everyday','Alltag',everydayDone(s.id)],['prediction','Vorhersage',a.prediction],['code','Code',a.code],['sim','Simulation',a.sim],['eval','Auswertung',a.eval],['check','Checkpoint',a.check]];return items.map(([k,l,done])=>`<span class="progressItem ${done?'done':''}">${done?'✓ ':''}${l}</span>`).join('')}
+function hintHTML(s){return `<div class="hints" data-stageid="${s.id}" data-helpkind="code">
+<div class="hint"><button>💡 Hinweis 1 – Denkfrage</button><div class="hintContent">${s.hint1}</div></div>
+<div class="hint locked"><button>🧭 Hinweis 2 – Programmablaufplan</button><div class="hintContent"><div class="pap">${s.pap.map((x,i)=>`<div class="papBox">${x}</div>${i<s.pap.length-1?'<div class="arrow">↓</div>':''}`).join('')}</div></div></div>
+<div class="hint locked"><button>⌨️ Hinweis 3 – Codehilfe</button><div class="hintContent"><pre>${escapeHTML(s.codeHint)}</pre></div></div>
+</div>`}
+function escapeHTML(x){return x.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+
+function renderStart(){
+  document.getElementById('stageEyebrow').textContent='Start';
+  document.getElementById('stageTitle').textContent='Regelungstechnik verstehen – vom Zweipunktregler zum PID-Regler';
+  document.getElementById('stageSubtitle').textContent='In dieser Lernumgebung entwickelst du Schritt für Schritt einen Regler, mit dem ein Roboter selbstständig einen konstanten Abstand zu einer Wand hält.';
+  document.getElementById('modePill').textContent=teacherMode?(presentationMode?'Lehrkraft · Präsentation':'Lehrkraft · Lösungen'):'Schüleransicht';
+  document.getElementById('progressStrip').innerHTML='<span class="progressItem current">So funktioniert die Lernstrecke</span>';
+  document.getElementById('content').innerHTML=`
+    <section class="startHero">
+      <div>
+        <div class="eyebrow">Deine Herausforderung</div>
+        <h1>Wie hält ein Roboter selbstständig den richtigen Abstand?</h1>
+        <p>Ein Ultraschallsensor misst ständig den Abstand zur Wand. Der Regler entscheidet daraus, wie stark die beiden Motoren korrigiert werden müssen. Du lernst verschiedene Reglertypen kennen, vergleichst ihr Verhalten in einer Simulation und überträgst am Ende einen PID-Regler auf den echten Roboter.</p>
+        <div class="pathFlow">
+          <span class="pathChip">Zweipunkt + Hysterese</span><span class="pathChip">P</span><span class="pathChip">I</span><span class="pathChip">PI</span><span class="pathChip">D</span><span class="pathChip">PID</span><span class="pathChip">Praxis</span>
+        </div>
+      </div>
+      <div class="startRobot">
+        <div class="wall"></div><div class="targetLine"></div><div class="beamMini"></div>
+        <div class="robotMini"><div class="sensorMini"></div></div>
+        <div class="caption">HC-SR04 misst den Wandabstand</div>
+      </div>
+    </section>
+
+    <div class="startGrid">
+      <section class="card">
+        <div class="cardHead"><h2>Was lernst du?</h2><span class="label">Ziel</span></div>
+        <div class="cardBody">
+          <p>Du untersuchst, wie unterschiedliche Regler auf eine Regelabweichung reagieren und welche Stärken und Schwächen sie besitzen. Dabei vergleichst du auch, <b>wie schnell</b> sie den Sollbereich erreichen und ob sie anschließend <b>stabil</b> dort bleiben. So wird sichtbar: Ein guter Regler soll schnell, genau und stabil arbeiten.</p>
+          <div class="challenge"><b>Am Ende kannst du:</b> Zweipunkt-, P-, I-, PI-, D- und PID-Verhalten erklären, einfachen Arduino-Code dafür nachvollziehen und einen PID-Regler für die Wandfahrt eines Roboters programmieren und abstimmen.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="cardHead"><h2>So arbeitest du auf jeder Seite</h2><span class="label">Lernweg</span></div>
+        <div class="cardBody">
+          <div class="startSteps">
+            <div class="startStep"><b>1 · Verstehen</b><span>Ein Alltagsbeispiel zeigt die Grundidee des Reglers.</span></div>
+            <div class="startStep"><b>2 · Vorhersagen</b><span>Du zeichnest zuerst selbst den erwarteten Verlauf des Istwerts.</span></div>
+            <div class="startStep"><b>3 · Programmieren</b><span>Du ergänzt den Regler in einer Arduino-IDE-ähnlichen Umgebung. Bei Bedarf gibt es gestufte Hilfen und einen Programmablaufplan.</span></div>
+            <div class="startStep"><b>4 · Simulieren</b><span>Du testest deine Idee am virtuellen Wandfahrroboter. Eine Stoppuhr misst, wann der Sollbereich erstmals erreicht und wann stabil eingeregelt wird.</span></div>
+            <div class="startStep"><b>5 · Vergleichen</b><span>Deine gezeichnete Vorhersage wird mit dem simulierten Verlauf verglichen.</span></div>
+            <div class="startStep"><b>6 · Sichern</b><span>Auswertung und Checkpoint müssen erledigt sein, bevor die nächste Reglerseite freigeschaltet wird.</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:18px">
+      <div class="cardHead"><h2>Welchen Teil des Regelkreises untersuchen wir?</h2><span class="label">Systemgrenze</span></div>
+      <div class="cardBody">
+        <p>In der gesamten Lernumgebung betrachten wir <b>denselben Wandfahrroboter als Regelstrecke</b>. Wir verändern bewusst nur den <b>Regler</b>. Dadurch können wir vergleichen, wie Zweipunkt-, P-, I-, PI-, D- und PID-Regler aus derselben Regelabweichung unterschiedliche Stellwerte <b>y</b> erzeugen.</p>
+        <div class="loopCard">
+          <div class="loopTitle"><h3>Regelkreis der Wandfahrt</h3><span class="focusBadge">Fokus: Regeleinrichtung / Regler</span></div>
+
+          <div class="classicLoopWrap">
+            <svg class="classicLoopSvg" viewBox="0 0 1100 360" role="img" aria-label="Klassischer geschlossener Regelkreis mit Vergleicher, Regler, Regelstrecke, Messeinrichtung und Rückkopplung">
+              <defs>
+                <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82b6"/>
+                </marker>
+                <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#d66a6a"/>
+                </marker>
+                <marker id="arrowGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#6d7782"/>
+                </marker>
+              </defs>
+
+              <!-- Regeleinrichtung -->
+              <rect x="80" y="38" width="500" height="176" rx="8" fill="none" stroke="#e48c8c" stroke-width="3" stroke-dasharray="9 7"/>
+              <text x="330" y="239" text-anchor="middle" font-size="22" font-weight="700" fill="#cf6565">Regeleinrichtung</text>
+
+              <!-- Vorwärtszweig -->
+              <line x1="18" y1="125" x2="105" y2="125" stroke="#3b82b6" stroke-width="4" marker-end="url(#arrowBlue)"/>
+              <text x="47" y="105" font-size="24" font-weight="700" fill="#27313a">w</text>
+
+              <rect x="110" y="78" width="175" height="94" fill="#fff" stroke="#8c939b" stroke-width="3"/>
+              <text x="197" y="132" text-anchor="middle" font-size="23" fill="#27313a">Vergleicher</text>
+
+              <line x1="285" y1="125" x2="355" y2="125" stroke="#3b82b6" stroke-width="4" marker-end="url(#arrowBlue)"/>
+              <text x="319" y="105" font-size="24" font-weight="700" fill="#27313a">e</text>
+
+              <rect x="360" y="78" width="175" height="94" fill="#eaf8f6" stroke="#0b8f87" stroke-width="4"/>
+              <text x="447" y="132" text-anchor="middle" font-size="23" font-weight="700" fill="#20363a">Regler</text>
+
+              <line x1="535" y1="125" x2="685" y2="125" stroke="#3b82b6" stroke-width="4" marker-end="url(#arrowBlue)"/>
+              <text x="604" y="105" font-size="24" font-weight="700" fill="#27313a">y</text>
+
+              <rect x="690" y="78" width="190" height="94" fill="#fff" stroke="#8c939b" stroke-width="3"/>
+              <text x="785" y="115" text-anchor="middle" font-size="22" fill="#27313a">Regel-</text>
+              <text x="785" y="143" text-anchor="middle" font-size="22" fill="#27313a">strecke</text>
+
+              <line x1="880" y1="125" x2="1060" y2="125" stroke="#3b82b6" stroke-width="4" marker-end="url(#arrowBlue)"/>
+              <text x="955" y="105" font-size="24" font-weight="700" fill="#27313a">x</text>
+
+              <!-- Störgröße z -->
+              <text x="785" y="22" text-anchor="middle" font-size="24" font-weight="700" fill="#27313a">z</text>
+              <line x1="755" y1="30" x2="755" y2="74" stroke="#6d7782" stroke-width="3" marker-end="url(#arrowGray)"/>
+              <line x1="815" y1="30" x2="815" y2="74" stroke="#6d7782" stroke-width="3" marker-end="url(#arrowGray)"/>
+
+              <!-- Messeinrichtung / Rückführung -->
+              <rect x="430" y="257" width="205" height="76" fill="#fff" stroke="#8c939b" stroke-width="3"/>
+              <text x="532" y="289" text-anchor="middle" font-size="21" fill="#27313a">Mess-</text>
+              <text x="532" y="315" text-anchor="middle" font-size="21" fill="#27313a">einrichtung</text>
+
+              <path d="M 980 125 L 980 295 L 640 295" fill="none" stroke="#d66a6a" stroke-width="4" marker-end="url(#arrowRed)"/>
+              <path d="M 425 295 L 195 295 L 195 175" fill="none" stroke="#d66a6a" stroke-width="4" marker-end="url(#arrowRed)"/>
+              <text x="305" y="279" font-size="24" font-weight="700" fill="#27313a">r</text>
+
+              <!-- Roboterbezug -->
+              <text x="16" y="350" font-size="15" fill="#607086">w Sollabstand · e Regelabweichung · y Stellgröße · x Istwert · r Rückführgröße · z Störgröße</text>
+            </svg>
+          </div>
+
+          <div class="loopMap">
+            <div><b>Vergleicher</b>bildet aus Sollwert w und Rückführgröße r die Regelabweichung e.</div>
+            <div><b>Regler</b>berechnet aus e je nach Reglertyp einen anderen Stellwert y.</div>
+            <div><b>Regelstrecke</b>Motortreiber, Motoren und fahrender Roboter bleiben in dieser Lernumgebung gleich.</div>
+            <div><b>Messeinrichtung</b>der HC-SR04 misst den Istwert x und liefert die Rückführgröße r.</div>
+          </div>
+
+          <div class="loopCompare">
+            <div><b>Bleibt gleich</b><ul><li>Wandfahrroboter / Regelstrecke</li><li>Ultraschallsensor / Messeinrichtung</li><li>Sollabstand</li><li>Grundaufbau der Motoransteuerung</li></ul></div>
+            <div><b>Wird verändert</b><ul><li>Art des Reglers</li><li>Berechnung der Stellgröße y</li><li>Reglerparameter wie Kp, Ki, Kd oder Hysterese</li></ul></div>
+          </div>
+          <div class="scopeNote"><b>Wichtig:</b> Auch die Regelstrecke beeinflusst das Verhalten eines Regelkreises. Hier bleibt sie bewusst gleich. Unterschiedliche Regelstrecken – etwa Temperatur-, Drehzahl- oder Füllstandsregelungen – können später in einer eigenen Lernumgebung untersucht werden.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:18px">
+      <div class="cardHead"><h2>Vom Modell zum echten System</h2><span class="label">Praxis</span></div>
+      <div class="cardBody">
+        <p>Die Simulation hilft dir, die Wirkung der Regler zu verstehen. Sie ist aber nur ein Modell. Beim echten Roboter beeinflussen unter anderem Motorunterschiede, Reibung, Akkuspannung, Sensorrauschen und Verzögerungen das Verhalten. Deshalb wird der PID-Regler am Ende praktisch getestet und neu abgestimmt.</p>
+        <div class="startAction"><button id="startLearningBtn" class="startBtn">Lernstrecke starten →</button></div>
+      </div>
+    </section>`;
+  document.getElementById('startLearningBtn').onclick=()=>{current=0;render()};
+}
+
+function render(){running=false;cancelAnimationFrame(animId);document.body.classList.toggle('teacher',teacherMode);document.body.classList.toggle('presentation',presentationMode);renderNav();if(current===-1){renderStart();return;}const s=stages[current],ss=state[s.id];
+ document.getElementById('stageEyebrow').textContent=`Lernschritt ${current+1} von ${stages.length}`;document.getElementById('stageTitle').textContent=s.title;document.getElementById('stageSubtitle').textContent=s.subtitle;document.getElementById('modePill').textContent=teacherMode?(presentationMode?'Lehrkraft · Präsentation':'Lehrkraft · Lösungen'):'Schüleransicht';document.getElementById('progressStrip').innerHTML=progressItems(s);
+ const isPraxis=s.id==='praxis';
+ document.getElementById('content').innerHTML=`
+ <div class="grid">
+  <div class="stack">
+   <section class="card"><div class="cardHead"><h2>1 · Problem & Alltagsbeispiel</h2><span class="label">Verstehen</span></div><div class="cardBody"><div class="challenge"><b>Problem:</b> ${s.problem}</div><div style="height:14px"></div><div class="everyday"><div class="everyIcon">${s.icon}</div><div><div class="label">Regler im Alltag</div><h3 style="margin:4px 0">${s.everydayTitle}</h3><p style="margin:0">${s.everyday}</p></div></div><div class="mathLabel">Mathematische Beschreibung</div><div class="formula">${s.formula}</div>${variableLegendHTML(s.id)}<div class="microtask"><b>Kurz nachgedacht:</b> ${s.everydayQ}<textarea id="everydayAns" class="answer" placeholder="Notiere deine Überlegung …">${teacherMode?teacherEverydaySolution(s.id):ss.everyday||''}</textarea><button id="checkEverydayBtn" class="taskAction">Antwort prüfen</button><div id="everydayFeedback" class="taskFeedback"></div><div class="feedbackNote">Die Rückmeldung bewertet die fachliche Aussage sinngemäß – eine wortgleiche Formulierung zur Musterlösung ist nicht nötig.</div>${taskHelpHTML(s,'everyday')}${solutionGateHTML('everyday')}</div><div class="teacherOnly solution"><b>Musterantwort:</b> ${teacherEverydaySolution(s.id)}</div></div></section>
+
+   <section class="card ${isPraxis?'studentOnly':''}"><div class="cardHead"><h2>2 · Vorhersage zeichnen</h2><span class="label">Vermuten</span></div><div class="cardBody"><p>Zeichne zuerst, wie sich der Abstand des Roboters deiner Meinung nach über die Zeit entwickeln wird. Die rote Linie zeigt den Sollwert von 20 cm.</p><div class="predictWrap"><div class="predictTools"><button id="clearPred">Zeichnung löschen</button><small>Mit Maus oder Stift zeichnen</small></div><canvas id="predictCanvas" width="760" height="300"></canvas></div><div class="teacherOnly solution"><b>Musteridee:</b> ${teacherPredictionText(s.id)}</div>${taskHelpHTML(s,'prediction')}</div></section>
+
+   <section class="card"><div class="cardHead"><h2>${isPraxis?'2':'3'} · Arduino-Code</h2><span class="label">Programmieren</span></div><div class="cardBody"><div class="ide"><div class="ideTop"><span>Arduino IDE</span><span>${s.id==='praxis'?'Wandfahrt_PID_real.ino':'Wandfahrt_'+s.short+'_Regler.ino'}</span></div><div class="ideToolbar"><button id="verifyCode" class="primary">✓ Compilieren</button><button id="fillTeacher" class="teacherOnly">Lösung einsetzen</button></div><div class="editorWrap"><div id="lineGutter" class="lineGutter" aria-hidden="true"></div><textarea id="codeEditor" class="codeEditor" spellcheck="false">${teacherMode?fullSketchFor(s.id):(ss.codeText||studentSketchFor(s.id))}</textarea></div><div class="serial" id="serialConsole">Serieller Monitor\nBereit.</div></div><div id="codeStatus" class="codeStatus">Ergänze den markierten Reglerteil und klicke auf „Compilieren“.</div>${hintHTML(s)}${solutionGateHTML('code')}<div id="codeCoach" class="codeCoach"></div><div class="teacherOnly solution teacherSolutionOld"><b>Musterlösung:</b><pre>${escapeHTML(s.solution)}</pre></div><div class="teacherOnly">${teacherCodeHTML(s.id)}</div></div></section>
+  </div>
+
+  <div class="stack">
+   <section class="card ${isPraxis?'studentOnly':''}"><div class="cardHead"><h2>4 · Simulation & Messdaten</h2><span class="label">Testen</span></div><div class="cardBody"><p>Starte die Simulation erst nach deiner Vorhersage. Deine gezeichnete Kurve wird anschließend im Messdiagramm eingeblendet.</p><div class="simTruthNote"><b>Wichtig:</b> Die Simulation verwendet die Werte aus deinem zuletzt erfolgreich compilierten Programmcode. Setzt du z. B. <code>pwmLinks = 0</code>, steht das linke Rad auch in der Simulation still.</div><div class="simModeBar"><button id="runSim" class="run">▶ Eigenen Code simulieren</button><button id="runReference" class="referenceBtn" disabled>◎ Typische Referenzfahrt ansehen</button><button id="pauseSim">⏸ Pause</button><button id="resetSim">↺ Fahrt zurücksetzen</button><button id="disturbSim">Störung auslösen</button></div><div id="simModeBadge" class="simModeBadge">Simulation: dein compilierter Code</div><div id="simBehaviorStatus" class="simBehavior info"><b>Hinweis:</b> Zuerst wird genau dein Programm simuliert. Nach dem ersten Test kannst du zusätzlich eine typische Referenzfahrt dieses Reglers ansehen und beide Fahrwege vergleichen.</div><div id="sliders"></div>${s.id==='pid'?'<div id="pidTuneFeedback" class="pidTune show"><b>PID-Tuning:</b> Verändere die Parameter und starte anschließend eine Fahrt. Die Rückmeldung berücksichtigt sowohl deine Werte als auch das tatsächlich simulierte Verhalten.</div>':''}<div class="pathLegend"><b>Fahrspur:</b> Die Linie hinter dem Roboter zeigt seinen tatsächlich simulierten Fahrtweg.</div>${taskHelpHTML(s,'simulation')}<div class="simPanel"><canvas id="robotCanvas" width="720" height="330"></canvas></div><div class="kpis"><div class="kpi"><small>Sollabstand</small><b>20 cm</b></div><div class="kpi"><small>Istabstand</small><b id="kpiDist">34.0 cm</b></div><div class="kpi"><small>Regelabweichung</small><b id="kpiErr">−14.0 cm</b></div><div class="kpi"><small>Stellgröße</small><b id="kpiU">0.00</b></div><div class="kpi motorKpi"><small>PWM links</small><b id="kpiLeft">0</b></div><div class="kpi motorKpi"><small>PWM rechts</small><b id="kpiRight">0</b></div></div><div style="height:10px"></div><div class="simPanel"><canvas id="chartCanvas" width="720" height="300"></canvas></div><div class="timeLab"><div class="timeLabHead"><div class="simClockWrap"><small>⏱ Simulationszeit</small><b id="simClock" class="simClock">0.0 s</b></div><span id="timeStatus" class="timeStatus">bereit</span></div><div class="timingGrid"><div class="timingMetric"><small>Sollbereich erstmals erreicht</small><b id="firstReachTime">—</b></div><div class="timingMetric"><small>Stabil eingeregelt</small><b id="settleTime">—</b></div><div class="timingMetric"><small>Definierter Sollbereich</small><b>19–21 cm</b></div></div><div class="timeExplain">„Sollbereich erreicht“ bedeutet: erstmals innerhalb von 20 ± 1 cm. „Stabil eingeregelt“ bedeutet: anschließend mindestens 2,0 s ununterbrochen in diesem Bereich. Ein kurzes Durchlaufen des Sollwerts zählt daher noch nicht als stabile Regelung.</div></div><div id="timingCompare" class="timingCompare"></div><div class="teacherOnly solution"><b>Besprechung:</b> Nutze „Störung auslösen“ und verändere die Reglerparameter, um typische Effekte sichtbar zu machen.</div></div></section>
+
+   <section class="card"><div class="cardHead"><h2>${isPraxis?'3':'5'} · Auswerten & sichern</h2><span class="label">Erklären</span></div><div class="cardBody"><div class="questionRow"><label>${s.evalQ}</label><textarea id="evalText" class="answer" placeholder="Begründe mit Fachbegriffen …">${teacherMode?s.solutionText:ss.evalText||''}</textarea><button id="checkEvalBtn" class="taskAction">Erklärung prüfen</button><div id="evalFeedback" class="taskFeedback"></div><div class="feedbackNote">Entscheidend ist der fachliche Sinn deiner Erklärung, nicht die genaue Formulierung der Musterlösung.</div>${taskHelpHTML(s,'eval')}${solutionGateHTML('eval')}</div><div class="teacherOnly solution"><b>Musterantwort:</b> ${s.solutionText}</div><div class="checkpoint"><h3>Checkpoint</h3><label>${s.mcq.q}</label><select id="mcq"><option value="">– auswählen –</option>${s.mcq.opts.map((o,i)=>`<option value="${i}" ${(teacherMode?i===s.mcq.correct:String(i)==String(ss.mcq))?'selected':''}>${o}</option>`).join('')}</select><button id="checkPointBtn" style="margin-top:10px;border:0;background:#2f6feb;color:white;border-radius:9px;padding:8px 11px;cursor:pointer">Antwort prüfen</button><div id="checkMsg" class="checkMsg"></div>${taskHelpHTML(s,'checkpoint')}${solutionGateHTML('checkpoint')}</div><div class="challenge" style="margin-top:14px"><b>Weiterdenken:</b> ${s.nextProblem}</div><div class="nextBar"><button id="resetPageBtn" class="pageResetBtn" title="Nur die Eingaben und den Fortschritt dieser Seite löschen">↺ Diese Seite zurücksetzen</button><span class="tiny" id="nextHint"></span><button id="nextBtn" class="nextBtn">${current===stages.length-1?'Lernstrecke abgeschlossen':'Weiter zu '+stages[current+1].short}</button></div></div></section>
+  </div>
+ </div>`;
+ wireStage(s,ss,isPraxis);updateNext(s);save();}
+
+function teacherEverydaySolution(id){return ({zp:'Die Hysterese verhindert, dass die Heizung bei kleinsten Messschwankungen ständig ein- und ausschaltet.',p:'Bei einem proportionalen Zusammenhang halbiert sich auch die Stellgröße.',i:'Die Fehlersumme wächst weiter an, solange der Fehler dasselbe Vorzeichen behält.',pi:'P sorgt für eine schnelle Reaktion; I beseitigt einen länger bestehenden Restfehler.',d:'Zusätzlich zum Abstand ist wichtig, wie schnell sich der Abstand verändert.',pid:'P reagiert auf den aktuellen Höhenfehler, I auf einen dauerhaft bestehenden Fehler, D auf die Änderungsgeschwindigkeit.',praxis:'Zum Beispiel Motorunterschiede, Reibung, Akkuspannung, Sensorrauschen oder Verzögerungen.'})[id]}
+function teacherPredictionText(id){return ({zp:'Typisch ist ein Schwingen um den Sollwert; mit Hysterese wird seltener umgeschaltet.',p:'Annäherung an den Sollwert, bei Störung kann ein kleiner bleibender Offset bestehen.',i:'Langsame Annäherung; je nach Ki deutliches Überschwingen möglich.',pi:'Schnelle Annäherung und Beseitigung eines bleibenden Fehlers; zu große Werte können schwingen.',d:'Ein reiner D-Anteil kann einen konstanten Startfehler nicht beseitigen; er reagiert nur auf Änderungen.',pid:'Schnelle, möglichst gedämpfte Annäherung ohne bleibende Regelabweichung.'})[id]||''}
+
+function wireStage(s,ss,isPraxis){
+ document.querySelectorAll('.hint button').forEach(b=>b.onclick=()=>b.parentElement.classList.toggle('open'));
+ bindTaskHints(document.getElementById('content'));
+ const eAns=document.getElementById('everydayAns');
+ eAns.oninput=()=>{if(!teacherMode){ss.everyday=eAns.value;ss.everydayOk=false;save();updateProgressOnly(s);updateNext(s);const f=document.getElementById('everydayFeedback');if(f)f.className='taskFeedback'}};
+ document.getElementById('checkEverydayBtn').onclick=()=>{const res=teacherMode?{level:'good',msg:teacherEverydaySolution(s.id),merke:(taskFeedbackData[s.id]?.everyday?.merke||'')} : scoreFreeText(s.id,'everyday',eAns.value);showTaskFeedback(document.getElementById('everydayFeedback'),res);if(!teacherMode){ss.everyday=eAns.value;ss.everydayOk=res.level==='good';if(res.level!=='good')registerFailedAttempt(s,ss,'everyday');save();updateProgressOnly(s);updateNext(s)}};
+ if(ss.everydayOk&&!teacherMode)showTaskFeedback(document.getElementById('everydayFeedback'),scoreFreeText(s.id,'everyday',ss.everyday));
+ const code=document.getElementById('codeEditor'),gutter=document.getElementById('lineGutter');setupStudentEditor(code,gutter);
+ code.oninput=()=>{updateLineNumbers(code,gutter);if(!teacherMode){ss.codeText=code.value;ss.code=false;ss.compiled=null;save();updateProgressOnly(s);updateNext(s)}};
+ code.onscroll=()=>{if(gutter)gutter.scrollTop=code.scrollTop};
+ document.getElementById('verifyCode').onclick=()=>verifyCode(s,ss,code.value);
+ const fill=document.getElementById('fillTeacher');if(fill)fill.onclick=()=>{code.value=fullSketchFor(s.id);updateLineNumbers(code,gutter);verifyCode(s,ss,code.value)};
+ const ev=document.getElementById('evalText');ev.oninput=()=>{if(!teacherMode){ss.evalText=ev.value;ss.eval=false;ss.evalOk=false;save();updateProgressOnly(s);updateNext(s);const f=document.getElementById('evalFeedback');if(f)f.className='taskFeedback'}};
+ document.getElementById('checkEvalBtn').onclick=()=>{const res=teacherMode?{level:'good',msg:s.solutionText,merke:(taskFeedbackData[s.id]?.eval?.merke||'')} : scoreFreeText(s.id,'eval',ev.value);showTaskFeedback(document.getElementById('evalFeedback'),res);if(!teacherMode){ss.evalText=ev.value;ss.evalOk=res.level==='good';ss.eval=ss.evalOk;if(res.level!=='good')registerFailedAttempt(s,ss,'eval');save();updateProgressOnly(s);updateNext(s)}};
+ if(ss.evalOk&&!teacherMode)showTaskFeedback(document.getElementById('evalFeedback'),scoreFreeText(s.id,'eval',ss.evalText));
+ ['everyday','eval','checkpoint','code'].forEach(k=>refreshSolutionGate(s,ss,k));
+ const mcq=document.getElementById('mcq');mcq.onchange=()=>{if(!teacherMode){ss.mcq=mcq.value;save()}};
+ document.getElementById('checkPointBtn').onclick=()=>{const ok=Number(mcq.value)===s.mcq.correct;const fb=checkpointFeedback[s.id];const box=document.getElementById('checkMsg');if(teacherMode||ok){ss.check=true;box.className='checkMsg checkFeedback good';box.innerHTML=`<b>✓ Richtig.</b> ${fb.explain}<span class="merke">Merke: ${fb.merke}</span>`;}else{ss.check=false;ss.checkTries=(ss.checkTries||0)+1;box.className='checkMsg checkFeedback bad';box.innerHTML=ss.checkTries>=2?`<b>Noch nicht.</b> ${fb.hint}<span class="merke">Nutze zusätzlich die Reglerformel und das Diagramm.</span>`:`<b>Noch nicht.</b> ${fb.hint}`;registerFailedAttempt(s,ss,'checkpoint');}save();updateProgressOnly(s);updateNext(s)};
+ document.getElementById('nextBtn').onclick=()=>{if(teacherMode||isComplete(s.id)){if(current<stages.length-1){current++;render()}else toast('Lernstrecke abgeschlossen.')}else toast('Es fehlen noch Pflichtschritte.')};
+ const resetPageBtn=document.getElementById('resetPageBtn');if(resetPageBtn)resetPageBtn.onclick=()=>{if(confirm('Nur diese Seite zurücksetzen? Eingaben, Zeichnung, Code, Simulation und Checkpoint dieser Seite werden gelöscht. Andere Seiten bleiben erhalten.')){state[s.id]={};initStageState(s.id);save();render();toast('Diese Seite wurde zurückgesetzt.')}};
+ document.querySelectorAll('.teacherCodeToggle button').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.teacherCodeToggle button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const box=document.getElementById('teacherNumberedCode');if(box)box.innerHTML=numberedCodeHTML(s.id,btn.dataset.codeview==='reg')});
+ if(!isPraxis){setupPrediction(s,ss);setupSimulation(s,ss)} else {ss.prediction=true;ss.sim=true;updateProgressOnly(s);updateNext(s)}
+}
+function updateLineNumbers(editor,gutter,errorLine=null){
+ if(!editor||!gutter)return;const n=editor.value.split('\n').length;let out='';for(let i=1;i<=n;i++)out+=`<span class="gline ${i===errorLine?'err':''}">${i}</span>`;gutter.innerHTML=out;gutter.scrollTop=editor.scrollTop;
+}
+function setupStudentEditor(editor,gutter){
+ updateLineNumbers(editor,gutter);
+ if(!editor||!gutter)return;
+ gutter.scrollTop=editor.scrollTop;
+ editor.addEventListener('scroll',()=>{gutter.scrollTop=editor.scrollTop});
+ editor.addEventListener('keydown',e=>{
+   if(e.key==='Tab'){
+     e.preventDefault();
+     const a=editor.selectionStart,b=editor.selectionEnd;
+     editor.value=editor.value.slice(0,a)+'  '+editor.value.slice(b);
+     editor.selectionStart=editor.selectionEnd=a+2;
+     editor.dispatchEvent(new Event('input',{bubbles:true}));
+   }
+ });
+}
+function lineOf(text,pattern){const lines=text.split('\n');for(let i=0;i<lines.length;i++){if(typeof pattern==='string'?lines[i].includes(pattern):pattern.test(lines[i]))return i+1}return null}
+function compilerDiagnostics(text){
+ const errors=[];const lines=text.split('\n');
+ const add=(line,msg)=>errors.push({line:line||1,msg});
+ lines.forEach((raw,i)=>{const line=i+1,s=raw.trim();if(!s||s.startsWith('//'))return;
+   if(/_{3,}/.test(s))add(line,'Programmstelle noch nicht ergänzt. Ersetze die Unterstriche durch gültigen Arduino-Code.');
+   const typos=[['analogWrit','analogWrite'],['digitalWrit','digitalWrite'],['pinMod','pinMode'],['delai','delay']];typos.forEach(([bad,good])=>{if(new RegExp('\\b'+bad+'\\s*\\(').test(s))add(line,`Befehl „${bad}“ ist nicht definiert. Meintest du „${good}()“?`)});
+   if((/=/.test(s)||/^(analogWrite|digitalWrite|pinMode|delay|delayMicroseconds|Serial\.|dauer\s*=)/.test(s)) && !/[;{}]$/.test(s) && !/^if\b|^else\b|^void\b/.test(s)) add(line,'Semikolon am Zeilenende fehlt.');
+ });
+ // Klammerprüfung
+ const pairs=[['{','}'],['(',')']];pairs.forEach(([a,b])=>{let c=0;for(let i=0;i<text.length;i++){if(text[i]===a)c++;if(text[i]===b)c--;if(c<0){add(lineOf(text,b)||1,`Unerwartete schließende Klammer „${b}“.`);c=0}}if(c>0)add(lines.length,`Es fehlt mindestens eine schließende Klammer „${b}“.`)});
+ // Deklarationen sammeln
+ const declared=new Set(['HIGH','LOW','OUTPUT','INPUT']);
+ const declRe=/\b(?:int|float|double|long|bool|byte|unsigned\s+long)\s+([^;]+)/g;let m;while((m=declRe.exec(text))){m[1].split(',').forEach(part=>{const mm=part.trim().match(/^([A-Za-z_]\w*)/);if(mm)declared.add(mm[1])})}
+ const assignRe=/^\s*([A-Za-z_]\w*)\s*=\s*[^=]/;lines.forEach((raw,i)=>{const m=raw.match(assignRe);if(m&&!declared.has(m[1]))add(i+1,`Variable „${m[1]}“ wurde nicht deklariert.`)});
+ // Spezifische häufige Variablenverwendung
+ ['Kp','Ki','Kd','regelabweichung','summe','alteRegelabweichung','aenderung','yP','yI','yD','korrektur','dt'].forEach(v=>{if(new RegExp('\\b'+v+'\\b').test(text)&&!declared.has(v)){const ln=lineOf(text,new RegExp('\\b'+v+'\\b'));add(ln,`Variable „${v}“ wurde nicht deklariert.`)}});
+ // Duplikate entfernen
+ const seen=new Set();return errors.filter(e=>{const k=e.line+'|'+e.msg;if(seen.has(k))return false;seen.add(k);return true});
+}
+function focusEditorLine(editor,gutter,line){if(!editor||!line)return;const lh=parseFloat(getComputedStyle(editor).lineHeight)||21.7;editor.scrollTop=Math.max(0,(line-4)*lh);updateLineNumbers(editor,gutter,line);editor.focus()}
+
+function numericVars(text){
+ const vars={sollAbstand:TARGET,grundGeschwindigkeit:120,dt:.05,hysterese:2};
+ const re=/(?:int|float|double|long)\s+([A-Za-z_]\w*)\s*=\s*(-?\d+(?:\.\d+)?)/g;let m;
+ while((m=re.exec(text)))vars[m[1]]=Number(m[2]);
+ return vars;
+}
+function safeExpr(expr,vars){
+ if(expr==null)return NaN;
+ let s=String(expr).trim().replace(/;/g,'');
+ // Arduino constrain(a,b,c)
+ const c=s.match(/^constrain\s*\((.*),\s*(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)\s*\)$/);
+ if(c){const v=safeExpr(c[1],vars),lo=Number(c[2]),hi=Number(c[3]);return Math.max(lo,Math.min(hi,v));}
+ s=s.replace(/\b([A-Za-z_]\w*)\b/g,(all,n)=>Object.prototype.hasOwnProperty.call(vars,n)?String(vars[n]):all);
+ if(!/^[0-9+\-*/().\s]+$/.test(s))return NaN;
+ try{return Function('"use strict";return ('+s+')')()}catch(e){return NaN}
+}
+function motorExpr(block,name){const re=new RegExp('analogWrite\\s*\\(\\s*'+name+'\\s*,\\s*([^;]+)\\)','i');const m=block.match(re);return m?m[1].trim():null}
+function compileProgramFromCode(s,text){
+ const vars=numericVars(text);
+ if(s.id==='zp'){
+   const re=/if\s*\(\s*abstand\s*>\s*([^)]+)\)\s*\{([\s\S]*?)\}\s*else\s+if\s*\(\s*abstand\s*<\s*([^)]+)\)\s*\{([\s\S]*?)\}/i;
+   const m=text.match(re);if(!m)return null;
+   const upper=safeExpr(m[1],vars),lower=safeExpr(m[3],vars);
+   const farL=safeExpr(motorExpr(m[2],'pwmLinks'),vars),farR=safeExpr(motorExpr(m[2],'pwmRechts'),vars);
+   const nearL=safeExpr(motorExpr(m[4],'pwmLinks'),vars),nearR=safeExpr(motorExpr(m[4],'pwmRechts'),vars);
+   if([upper,lower,farL,farR,nearL,nearR].some(v=>!Number.isFinite(v)))return null;
+   return {type:'zp',upper,lower,farL,farR,nearL,nearR,vars};
+ }
+ const left=motorExpr(text,'pwmLinks')||'constrain(grundGeschwindigkeit + korrektur, 0, 255)';
+ const right=motorExpr(text,'pwmRechts')||'constrain(grundGeschwindigkeit - korrektur, 0, 255)';
+ return {type:s.id,kp:vars.Kp??s.params.kp??0,ki:vars.Ki??s.params.ki??0,kd:vars.Kd??s.params.kd??0,dt:vars.dt??.05,base:vars.grundGeschwindigkeit??120,leftExpr:left,rightExpr:right,vars};
+}
+function verifyCode(s,ss,text){
+ const box=document.getElementById('codeStatus'),editor=document.getElementById('codeEditor'),gutter=document.getElementById('lineGutter');
+ const syntax=compilerDiagnostics(text);
+ if(syntax.length&&!teacherMode){
+   ss.code=false;ss.compiled=null;box.className='codeStatus err';box.innerHTML='<b>Compilation fehlgeschlagen.</b><ul class="compilerList">'+syntax.slice(0,5).map(e=>`<li><span class="compilerLine">Zeile ${e.line}:</span> ${e.msg}</li>`).join('')+'</ul>';
+   focusEditorLine(editor,gutter,syntax[0].line);registerFailedAttempt(s,ss,'code');save();updateProgressOnly(s);updateNext(s);return;
+ }
+ let ok=false;const t=text.replace(/\s+/g,' ');
+ switch(s.id){
+  case'zp':ok=!t.includes('_____')&&/if\s*\(\s*abstand\s*>/.test(t)&&/else\s+if\s*\(\s*abstand\s*</.test(t)&&/analogWrite/.test(t);break;
+  case'p':ok=!t.includes('_____')&&/sollAbstand\s*-\s*abstand/.test(t)&&/Kp\s*\*\s*regelabweichung/.test(t)&&/korrektur\s*=\s*(?:yP|pAnteil)/.test(t);break;
+  case'i':ok=!t.includes('_____')&&/summe\s*=\s*summe\s*\+\s*regelabweichung\s*\*\s*dt/.test(t)&&/Ki\s*\*\s*summe/.test(t);break;
+  case'pi':ok=!t.includes('_____')&&/(?:yP|pAnteil)\s*\+\s*(?:yI|iAnteil)/.test(t);break;
+  case'd':ok=!t.includes('_____')&&/regelabweichung\s*-\s*alteRegelabweichung/.test(t)&&/Kd\s*\*\s*aenderung/.test(t);break;
+  case'pid':case'praxis':ok=!t.includes('_____')&&/Kp\s*\*\s*regelabweichung/.test(t)&&/Ki\s*\*\s*summe/.test(t)&&/Kd\s*\*\s*aenderung/.test(t)&&/(?:yP|pAnteil)\s*\+\s*(?:yI|iAnteil)\s*\+\s*(?:yD|dAnteil)/.test(t);break;
+ }
+ const compiled=ok?compileProgramFromCode(s,text):null;
+ if((ok&&compiled)||teacherMode){
+   ss.code=true;ss.compiled=compiled||compileProgramFromCode(s,fullSketchFor(s.id));box.className='codeStatus ok';box.innerHTML='<b>✓ Compilation erfolgreich.</b> Keine erkannten Syntaxfehler. Die Simulation verwendet jetzt genau diese Regler- und Motorwerte.';updateLineNumbers(editor,gutter);setSimMode('student',s,ss);const sb=document.getElementById('simBehaviorStatus');if(sb){sb.className='simBehavior info';sb.innerHTML='<b>Neu compiliert:</b> Starte deinen Code erneut. Die Simulation zeigt exakt die programmierten Motorwerte und Reglerparameter.'}
+ }else{
+   ss.code=false;ss.compiled=null;box.className='codeStatus warn';let msg='Der Arduino-Code enthält keine erkannten Syntaxfehler, aber die erwartete Reglerlogik wurde noch nicht vollständig erkannt.';let ln=null;
+   if(s.id==='p')ln=lineOf(text,/regelabweichung|yP|pAnteil/);else if(s.id==='i')ln=lineOf(text,/summe|yI|iAnteil/);else if(s.id==='pi')ln=lineOf(text,/korrektur/);else if(s.id==='d')ln=lineOf(text,/aenderung|yD|dAnteil/);else if(s.id==='pid'||s.id==='praxis')ln=lineOf(text,/yP|pAnteil|korrektur/);else ln=lineOf(text,/if\s*\(\s*abstand/);
+   box.innerHTML='<b>✓ Syntaxprüfung erfolgreich – Reglerprüfung noch offen.</b> '+msg+(ln?`<br><span class="compilerLine">Prüfe besonders Zeile ${ln}.</span>`:'');if(ln)focusEditorLine(editor,gutter,ln);registerFailedAttempt(s,ss,'code');
+ }
+ refreshSolutionGate(s,ss,'code');save();updateProgressOnly(s);updateNext(s)
+}
+function updateProgressOnly(s){document.getElementById('progressStrip').innerHTML=progressItems(s);renderNav()}
+function updateNext(s){const b=document.getElementById('nextBtn'),hint=document.getElementById('nextHint');if(!b)return;const missing=[];const ss=state[s.id];if(!everydayDone(s.id))missing.push('Alltagsfrage');[['prediction','Vorhersage'],['code','Code'],['sim','Simulation'],['eval','Auswertung'],['check','Checkpoint']].forEach(([k,l])=>{if(!ss[k])missing.push(l)});b.disabled=!teacherMode&&missing.length>0;hint.textContent=teacherMode?'Lehrkraftmodus: freie Navigation':missing.length?'Noch offen: '+missing.join(', '):'✓ Alle Pflichtschritte erledigt'}
+
+function setupPrediction(s,ss){const c=document.getElementById('predictCanvas'),ctx=c.getContext('2d');let drawing=false,pts=ss.predPoints||[];function axes(){ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.strokeStyle='#dfe6ee';ctx.lineWidth=1;for(let y=30;y<=260;y+=46){ctx.beginPath();ctx.moveTo(50,y);ctx.lineTo(740,y);ctx.stroke()}for(let x=50;x<=740;x+=86){ctx.beginPath();ctx.moveTo(x,20);ctx.lineTo(x,270);ctx.stroke()}ctx.strokeStyle='#d54d4d';ctx.lineWidth=2;const sy=20+(40-TARGET)/40*240;ctx.beginPath();ctx.moveTo(50,sy);ctx.lineTo(740,sy);ctx.stroke();ctx.fillStyle='#667487';ctx.font='12px Segoe UI';ctx.fillText('Abstand [cm]',8,18);ctx.fillText('Zeit →',690,290);ctx.fillStyle='#d54d4d';ctx.fillText('Soll 20 cm',650,sy-6);if(pts.length>1){ctx.strokeStyle='#677487';ctx.lineWidth=3;ctx.setLineDash([6,4]);ctx.beginPath();pts.forEach((p,i)=>{const x=p.x*c.width,y=p.y*c.height;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();ctx.setLineDash([])}}axes();function pos(e){const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}c.onpointerdown=e=>{if(teacherMode)return;drawing=true;pts=[];c.setPointerCapture(e.pointerId);const p=pos(e);pts.push(p);axes()};c.onpointermove=e=>{if(!drawing)return;pts.push(pos(e));axes()};c.onpointerup=()=>{if(!drawing)return;drawing=false;if(pts.length>5){ss.prediction=true;ss.predPoints=pts;save();updateProgressOnly(s);updateNext(s)}};document.getElementById('clearPred').onclick=()=>{if(teacherMode)return;pts=[];ss.predPoints=[];ss.prediction=false;save();axes();updateProgressOnly(s);updateNext(s)}}
+
+let sim={};
+let simMode='student';
+let simProgramOverride=null;
+let behaviorChecked=false;
+function setSimMode(mode,s,ss){
+  simMode=mode;behaviorChecked=false;
+  simProgramOverride=mode==='reference'?compileProgramFromCode(s,fullSketchFor(s.id)):null;
+  const badge=document.getElementById('simModeBadge');
+  if(badge){badge.className='simModeBadge'+(mode==='reference'?' reference':'');badge.textContent=mode==='reference'?'Simulation: typische Referenzfahrt des '+s.short+'-Reglers':'Simulation: dein compilierter Code';}
+}
+function setupSimulation(s,ss){
+ const rc=document.getElementById('robotCanvas'),rctx=rc.getContext('2d'),cc=document.getElementById('chartCanvas'),cctx=cc.getContext('2d');
+ const sliders=document.getElementById('sliders');sliders.innerHTML=sliderHTML(s);
+ sliders.querySelectorAll('input[type=range]').forEach(el=>{const out=document.getElementById(el.id+'Val');out.textContent=el.value;el.oninput=()=>{out.textContent=el.value;setSimMode('student',s,ss);syncParameterToCode(s,ss,el.id,Number(el.value));ss.timing=null;save();resetModel(s);if(s.id==='pid')previewPidTuning(ss);}});
+ setSimMode('student',s,ss);resetModel(s);if(s.id==='pid')previewPidTuning(ss);
+ function loop(){if(running)stepModel(s,ss,.035);drawRobot(rctx,rc,s);drawChart(cctx,cc,s,ss);const diagnoseAt=s.id==='pid'?7.0:3.2;if(running&&simMode==='student'&&!behaviorChecked&&sim.t>diagnoseAt){behaviorChecked=true;diagnoseBehavior(s,ss)}animId=requestAnimationFrame(loop)}loop();
+ document.getElementById('runSim').onclick=()=>{
+  if(!teacherMode&&!ss.prediction){toast('Zeichne zuerst deine Vorhersage.');return}
+  if(!teacherMode&&!ss.code){toast('Compiliere zuerst deinen Programmcode.');return}
+  if(!ss.compiled){const src=teacherMode?fullSketchFor(s.id):(ss.codeText||studentSketchFor(s.id));ss.compiled=compileProgramFromCode(s,src)}
+  if(!ss.compiled){toast('Der Programmcode konnte für die Simulation nicht gelesen werden.');return}
+  setSimMode('student',s,ss);ss.timing={firstReach:null,settle:null,observedUntil:0,tolerance:TARGET_TOLERANCE,hold:STABLE_HOLD};save();resetModel(s);running=true;updateTimingDisplay(s,ss);ss.sim=true;const ccBox=document.getElementById('codeCoach');if(ccBox)ccBox.classList.remove('show');if(s.id==='pid')previewPidTuning(ss,true);save();updateProgressOnly(s);updateNext(s);
+  const rb=document.getElementById('runReference');if(rb)rb.disabled=false;
+ };
+ document.getElementById('runReference').onclick=()=>{
+  if(!ss.sim&&!teacherMode){toast('Teste zuerst mindestens einmal deinen eigenen Code.');return}
+  setSimMode('reference',s,ss);resetModel(s);running=true;updateTimingDisplay(s,ss);
+  const st=document.getElementById('simBehaviorStatus');if(st){st.className='simBehavior info';st.innerHTML='<b>Referenzfahrt:</b> Jetzt wird der vorbereitete Musterregler mit sinnvollen Parametern simuliert. Dein eigener Code wird dabei nicht verändert. Vergleiche Fahrweg und Messdiagramm mit deinem Versuch.'}
+ };
+ if(ss.sim||teacherMode)document.getElementById('runReference').disabled=false;
+ document.getElementById('pauseSim').onclick=()=>{running=false;updateTimingDisplay(s,ss,true)};
+ document.getElementById('resetSim').onclick=()=>{running=false;resetModel(s);const st=document.getElementById('simBehaviorStatus');if(st&&simMode==='student'){st.className='simBehavior info';st.innerHTML='<b>Hinweis:</b> Die Fahrt wurde zurückgesetzt. Starte deinen compilierten Code erneut.'}};
+ document.getElementById('disturbSim').onclick=()=>{sim.timingFrozen=true;sim.theta-=0.22;sim.x+=2.5;sim.disturb=1.0;const ts=document.getElementById('timeStatus');if(ts){ts.className='timeStatus paused';ts.textContent='Störung – Startzeitmessung gespeichert'}};
+}
+
+function previewPidTuning(ss,runningNow=false){
+ const box=document.getElementById('pidTuneFeedback');if(!box)return;const p=ss.compiled||{};const kp=Number(p.kp||0),ki=Number(p.ki||0),kd=Number(p.kd||0);
+ let msg='';
+ if(ki>.07&&kd<1.0)msg='Der I-Anteil ist im Verhältnis zur D-Dämpfung recht stark. Achte auf deutliches Überschwingen oder ein Weiterlenken über den Sollwert hinaus.';
+ else if(kp>1.2&&kd<.9)msg='Der P-Anteil reagiert sehr kräftig, während der D-Anteil wenig dämpft. Die Fahrt könnte aggressiv oder schwingend werden.';
+ else if(kp<.2)msg='Der P-Anteil ist sehr klein. Die unmittelbare Reaktion auf eine große Regelabweichung könnte zu schwach sein.';
+ else if(ki<.005)msg='Der I-Anteil ist nahezu ausgeschaltet. Ein länger bestehender Restfehler wird dann kaum abgebaut.';
+ else if(kd>2.6)msg='Der D-Anteil ist sehr stark. In der idealisierten Simulation kann das dämpfen; am echten Sensor wäre eine hohe D-Verstärkung empfindlich gegenüber Messrauschen.';
+ else msg='Die Werte liegen in einem plausiblen Bereich. Entscheidend ist jetzt der tatsächliche Verlauf der Fahrt.';
+ box.className='pidTune show';box.innerHTML=`<b>PID-Tuning – aktuelle Werte:</b> Kₚ = ${kp.toFixed(2)}, Kᵢ = ${ki.toFixed(3)}, K_D = ${kd.toFixed(2)}<br>${msg}${runningNow?'<br><b>Fahrt läuft:</b> Nach einigen Sekunden wird das reale Simulationsverhalten ausgewertet.':''}`;
+}
+function pidMetrics(){
+ const h=sim.history;if(!h||h.length<8)return null;const ds=h.map(p=>p.d);const tail=ds.slice(Math.max(0,ds.length-25));const final=tail.reduce((a,b)=>a+b,0)/tail.length;const min=Math.min(...ds),max=Math.max(...ds);const overshoot=Math.max(0,TARGET-min);const finalErr=Math.abs(final-TARGET);let crossings=0,last=Math.sign(ds[0]-TARGET);for(const d of ds.slice(1)){const sg=Math.sign(d-TARGET);if(sg&&last&&sg!==last)crossings++;if(sg)last=sg}let settle=null;for(let i=0;i<ds.length;i++){if(ds.slice(i).every(d=>Math.abs(d-TARGET)<=1.5)){settle=h[i].t;break}}return {min,max,final,overshoot,finalErr,crossings,settle:sim.settledTime,firstReach:sim.firstReach};
+}
+function renderPidTuningFeedback(ss){
+ const box=document.getElementById('pidTuneFeedback');if(!box)return;const m=pidMetrics();const p=ss.compiled||{};if(!m){previewPidTuning(ss);return}const kp=Number(p.kp||0),ki=Number(p.ki||0),kd=Number(p.kd||0);let cls='warn',title='Noch optimierbar',advice='';
+ const collision=m.min<=8;
+ if(collision){cls='bad';title='Kollisionsgefahr';if(ki>.05&&kd<1.2)advice='Der I-Anteil summiert den Fehler stark auf, während der D-Anteil die Annäherung nur wenig dämpft. Verringere Kᵢ deutlich oder erhöhe K_D und teste erneut.';else if(kp>1.1&&kd<1.0)advice='Die unmittelbare P-Reaktion ist sehr stark und kaum gedämpft. Verringere Kₚ oder erhöhe K_D.';else advice='Der Roboter kommt der Wand zu nahe. Reduziere zunächst die aggressive Stellwirkung und erhöhe bei Bedarf die D-Dämpfung. Verändere möglichst nur einen Parameter pro Versuch.'}
+ else if(m.overshoot>4){cls='warn';title='Deutliches Überschwingen';if(ki>.035)advice='Der I-Anteil wirkt noch stark weiter, nachdem der Sollwert erreicht wurde. Verringere Kᵢ etwas.';else if(kd<1.2)advice='Die Annäherung wird noch wenig gedämpft. Erhöhe K_D schrittweise.';else advice='Verringere Kₚ leicht und beobachte, ob das Überschwingen kleiner wird.'}
+ else if(m.finalErr>2.5){cls='warn';title='Noch zu große Endabweichung';if(kp<.35)advice='Die unmittelbare Reaktion ist eher schwach. Erhöhe Kₚ etwas.';else if(ki<.015)advice='Erhöhe Kᵢ vorsichtig, damit ein länger bestehender Restfehler stärker abgebaut wird.';else advice='Die Regelung nähert sich an, ist aber noch nicht gut eingeschwungen. Prüfe Kₚ und Kᵢ schrittweise und beobachte die Endabweichung.'}
+ else if(m.crossings>5){cls='warn';title='Schwingneigung';advice=kd<1.8?'Erhöhe K_D etwas, um schnelle Änderungen stärker zu dämpfen.':'Reduziere Kₚ oder Kᵢ leicht; die Regelung reagiert insgesamt noch zu unruhig.'}
+ else if(m.settle!=null&&m.settle>8){cls='warn';title='Stabil, aber noch langsam';advice='Der Sollbereich wird stabil erreicht, allerdings erst relativ spät. Verändere Kₚ vorsichtig nach oben und beobachte, ob die Einschwingzeit sinkt, ohne dass das Überschwingen deutlich zunimmt.'}
+ else {cls='good';title='Gute Abstimmung';advice='Der Roboter nähert sich dem Sollabstand zügig, überschwingt nur begrenzt und bleibt anschließend nahe am Sollwert. Verändere einen Parameter leicht und prüfe, ob du die Fahrt noch ruhiger oder schneller machen kannst.'}
+ box.className='pidTune show '+cls;box.innerHTML=`<b>${title}</b><div class="pidMetrics"><div class="pidMetric"><small>Kₚ / Kᵢ / K_D</small><b>${kp.toFixed(2)} / ${ki.toFixed(3)} / ${kd.toFixed(2)}</b></div><div class="pidMetric"><small>Überschwingen</small><b>${m.overshoot.toFixed(1)} cm</b></div><div class="pidMetric"><small>Endabweichung</small><b>${m.finalErr.toFixed(1)} cm</b></div><div class="pidMetric"><small>Schwingungen</small><b>${m.crossings}</b></div><div class="pidMetric"><small>Sollbereich erstmals</small><b>${m.firstReach!=null?m.firstReach.toFixed(1)+' s':'—'}</b></div><div class="pidMetric"><small>Stabil eingeregelt</small><b>${m.settle!=null?m.settle.toFixed(1)+' s':'—'}</b></div></div><b>Nächster Schritt:</b> ${advice}<div class="tiny" style="margin-top:6px">Die Aussage bezieht sich auf diese Regelstrecke. Ein Parameter ist nicht allgemein „richtig“ oder „falsch“. Schnelligkeit, Genauigkeit und Stabilität müssen gemeinsam betrachtet werden.</div>`;
+}
+function codeQualityFeedback(s,ss){
+ const box=document.getElementById('codeCoach');if(!box||teacherMode)return;const text=ss.codeText||'';let positives=[],tips=[];
+ if(/constrain\s*\(/.test(text))positives.push('Die PWM-Werte werden mit <code>constrain()</code> auf einen gültigen Bereich begrenzt.');
+ if(/\byP\b/.test(text)&&(!['pi','pid'].includes(s.id)||/\byI\b/.test(text))&&(!['pid'].includes(s.id)||/\byD\b/.test(text)))positives.push('Die Regleranteile sind mit yP, yI und yD klar benannt.');
+ if(!/constrain\s*\(/.test(text)&&s.id!=='zp')tips.push('Begrenze die berechneten PWM-Werte auf 0 bis 255, z. B. mit <code>constrain()</code>.');
+ if((text.match(/\b120\b/g)||[]).length>=3)tips.push('Die Grundgeschwindigkeit steht mehrfach als Zahl im Code. Eine Variable <code>grundGeschwindigkeit</code> macht spätere Änderungen einfacher.');
+ if(/\bpAnteil\b|\biAnteil\b|\bdAnteil\b/.test(text))tips.push('Für die einheitliche Regelungsnotation kannst du die Anteile als <code>yP</code>, <code>yI</code> und <code>yD</code> benennen.');
+ if(s.id==='i'||s.id==='pi'||s.id==='pid')tips.push('Experten-Tipp: Bei einem realen Regler kann die Fehlersumme begrenzt werden, damit der I-Anteil bei langer großer Abweichung nicht unbegrenzt anwächst (Anti-Windup).');
+ if(s.id==='d'||s.id==='pid')tips.push('Experten-Tipp: Der D-Anteil reagiert empfindlich auf Messrauschen. Am realen HC-SR04 kann deshalb eine Glättung der Messwerte sinnvoll sein.');
+ if(!positives.length)positives.push('Der Code ist ausführbar und erzeugt in der Simulation ein plausibles Reglerverhalten.');
+ const normalTips=tips.slice(0,2),expert=tips.find(t=>t.startsWith('Experten-Tipp'));
+ box.className='codeCoach show';box.innerHTML=`<h4>✓ Dein Regler funktioniert – wie kannst du den Code noch verbessern?</h4><b>Stärke:</b><ul>${positives.slice(0,2).map(x=>`<li>${x}</li>`).join('')}</ul>${normalTips.filter(x=>!x.startsWith('Experten-Tipp')).length?`<b>Verbesserung:</b><ul>${normalTips.filter(x=>!x.startsWith('Experten-Tipp')).map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${expert?`<div class="expert">⭐ ${expert}</div>`:''}`;ss.codeCoachSeen=true;save();
+}
+function diagnoseBehavior(s,ss){
+ const box=document.getElementById('simBehaviorStatus');if(!box||simMode!=='student')return;
+ const p=ss.compiled;if(!p)return;
+ const startErr=14,currentErr=Math.abs(sim.x);let warn='',ok='';
+ if(s.id==='zp'){
+   const stopped=[p.farL,p.farR,p.nearL,p.nearR].some(v=>v<1),farWrong=p.farR<=p.farL,nearWrong=p.nearL<=p.nearR,extreme=Math.max(Math.abs(p.farR-p.farL),Math.abs(p.nearL-p.nearR))>210;
+   if(farWrong||nearWrong)warn='Die Lenkrichtung passt nicht zum typischen Zweipunktregler für diese Wandfahrt. Bei zu großem Abstand muss der Roboter zur Wand, bei zu kleinem Abstand von ihr weg lenken.';
+   else if(stopped||extreme)warn='Dein Code ist ausführbar, erzeugt aber eine sehr harte Lenkung: Mindestens ein Rad steht zeitweise still bzw. die PWM-Differenz ist extrem. Passe die Motorwerte so an, dass beide Räder vorwärts laufen und nur unterschiedlich schnell sind.';
+   else ok='Dein Code erzeugt qualitativ die typische Zweipunkt-Wandfahrt. Vergleiche nun mit der Referenzfahrt.';
+ }else if(s.id==='d')ok='Beim reinen D-Anteil ist es erwartbar, dass der Sollabstand nicht dauerhaft gehalten wird. Der D-Anteil reagiert nur auf Änderungen der Regelabweichung.';
+ else if(s.id==='pid'){
+   renderPidTuningFeedback(ss);const m=pidMetrics();if(m&&m.min<=8)warn='Mit dieser PID-Abstimmung besteht Kollisionsgefahr. Nutze die konkrete Tuning-Rückmeldung unter den Reglerparametern.';
+   else if(m&&m.finalErr>3.5)warn='Der PID-Regler arbeitet, ist aber noch nicht gut abgestimmt. Die Tuning-Rückmeldung schlägt dir einen nächsten Parameter-Schritt vor.';
+   else ok='Dein PID-Regler zeigt für diese Regelstrecke ein plausibles Verhalten. Nutze die Kennwerte, um ihn weiter zu optimieren.';
+ }else{
+   if(currentErr>startErr*1.05||Math.abs(sim.theta)>1.05)warn='Der Roboter entfernt sich vom Sollverhalten oder lenkt sehr stark. Prüfe Vorzeichen, Motorzuordnung und Reglerparameter und compiliere anschließend erneut.';
+   else if(currentErr>startErr*.88)warn='Der Regler wirkt, nähert sich dem Sollabstand aber nur wenig. Prüfe Formel, Vorzeichen und Reglerparameter.';
+   else ok='Dein Regler bewegt den Roboter qualitativ in die erwartete Richtung. Nutze die Referenzfahrt zum Vergleich.';
+ }
+ const timeInfo=sim.firstReach!=null?` <b>Zeit:</b> Sollbereich erstmals nach ${sim.firstReach.toFixed(1)} s${sim.settledTime!=null?`, stabil eingeregelt nach ${sim.settledTime.toFixed(1)} s`:', bisher noch nicht stabil eingeregelt'}.`:'';
+ if(warn){box.className='simBehavior warn';box.innerHTML='<b>Noch nicht typisches Reglerverhalten:</b> '+warn+timeInfo+' <b>Passe deinen Code oder die Parameter an und teste erneut.</b>'}
+ else {box.className='simBehavior ok';box.innerHTML='<b>Qualitativer Check:</b> '+ok+timeInfo;codeQualityFeedback(s,ss)}
+}
+function sliderHTML(s){let h='';function row(id,label,min,max,step,val){return `<div class="sliderRow"><label>${label}</label><input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${val}"><output id="${id}Val">${val}</output></div>`}
+ const ss=state[s.id],p=ss.compiled||{};
+ if(s.id==='zp')h+=row('hys','Hysterese ±',0,6,.5,Math.max(0,((p.upper??22)-(p.lower??18))/2));
+ if(['p','pi','pid'].includes(s.id))h+=row('kp','Kp',0,2.0,.05,p.kp??s.params.kp??.8);
+ if(['i','pi'].includes(s.id))h+=row('ki','Ki',0,.45,.01,p.ki??s.params.ki??.15);
+ if(s.id==='pid')h+=row('ki','Ki',0,.15,.005,p.ki??s.params.ki??.01);
+ if(s.id==='d')h+=row('kd','Kd',0,1.6,.05,p.kd??s.params.kd??.7);
+ if(s.id==='pid')h+=row('kd','Kd',0,3.0,.05,p.kd??s.params.kd??1.8);
+ return h?`<div class="paramCodeNote">Parameteränderungen werden direkt in den sichtbaren Programmcode übernommen.</div>${h}`:''
+}
+function syncParameterToCode(s,ss,id,val){
+ const ed=document.getElementById('codeEditor');if(!ed)return;let text=ed.value;
+ const name={kp:'Kp',ki:'Ki',kd:'Kd',hys:'hysterese'}[id];
+ if(name){const re=new RegExp('((?:int|float|double)\s+'+name+'\s*=\s*)(-?\d+(?:\.\d+)?)');if(re.test(text))text=text.replace(re,'$1'+val);
+   if(id==='hys'){
+     const up=(TARGET+val),lo=(TARGET-val);
+     // Falls direkte Zahlen (z. B. 22/18) verwendet werden, werden auch diese sichtbar angepasst.
+     text=text.replace(/abstand\s*>\s*\d+(?:\.\d+)?/,'abstand > '+up).replace(/abstand\s*<\s*\d+(?:\.\d+)?/,'abstand < '+lo);
+   }
+ }
+ ed.value=text;ss.codeText=text;ss.compiled=compileProgramFromCode(s,text);ss.code=!!ss.compiled;save();updateProgressOnly(s);updateNext(s)
+}
+function timingLabel(v){return v==null?'—':Number(v).toFixed(1)+' s'}
+function updateTimingComparison(currentId){
+ const box=document.getElementById('timingCompare');if(!box)return;
+ const compareStages=stages.filter(x=>x.id!=='praxis');
+ const any=compareStages.some(x=>state[x.id]&&state[x.id].timing);
+ const rows=compareStages.map(x=>{const st=state[x.id]||{},tm=st.timing;const first=tm?timingLabel(tm.firstReach):'—';const settle=tm?timingLabel(tm.settle):'—';return `<tr class="${x.id===currentId?'currentRow':''}"><td><b>${x.short}</b></td><td>${first}</td><td>${settle}</td></tr>`}).join('');
+ box.innerHTML=`<div class="timingCompareHead">Zeitvergleich deiner bisherigen Reglerfahrten</div><table><thead><tr><th>Regler</th><th>Sollbereich erstmals</th><th>stabil eingeregelt</th></tr></thead><tbody>${rows}</tbody></table><div class="timingCompareNote">${any?'Die Werte stammen jeweils aus deiner letzten eigenen Fahrt. So kannst du die Regler nicht nur nach Genauigkeit und Schwingung, sondern auch nach ihrer Schnelligkeit vergleichen.':'Nach deiner ersten eigenen Simulation erscheinen hier die gemessenen Zeiten. Beim reinen D-Anteil ist eine dauerhafte Ausregelung des Sollwerts nicht zu erwarten.'}</div>`;
+}
+function updateTimingDisplay(s,ss,paused=false){
+ const clock=document.getElementById('simClock'),first=document.getElementById('firstReachTime'),settle=document.getElementById('settleTime'),status=document.getElementById('timeStatus');
+ if(clock)clock.textContent=(sim.t||0).toFixed(1)+' s';
+ if(first)first.textContent=timingLabel(sim.firstReach);
+ if(settle)settle.textContent=timingLabel(sim.settledTime);
+ if(status){
+   status.className='timeStatus';
+   if(paused&&sim.t>0){status.classList.add('paused');status.textContent='Pause';}
+   else if(sim.settledTime!=null){status.classList.add('stable');status.textContent='✓ stabil eingeregelt';}
+   else if(sim.inBandSince!=null){const held=Math.max(0,sim.t-sim.inBandSince);status.classList.add('inband');status.textContent='Sollbereich · '+Math.min(STABLE_HOLD,held).toFixed(1)+' / '+STABLE_HOLD.toFixed(1)+' s';}
+   else if(sim.firstReach!=null){status.classList.add('leftband');status.textContent='Sollbereich wieder verlassen';}
+   else status.textContent=sim.t>0?'Annäherung':'bereit';
+ }
+ updateTimingComparison(s.id);
+}
+function trackTiming(s,ss){
+ if(sim.timingFrozen){updateTimingDisplay(s,ss);return;}
+ const dist=TARGET+sim.x,inBand=Math.abs(dist-TARGET)<=TARGET_TOLERANCE;let changed=false;
+ if(inBand){
+   if(sim.firstReach==null){sim.firstReach=sim.t;changed=true;}
+   if(sim.inBandSince==null)sim.inBandSince=sim.t;
+   if(sim.settledTime==null&&sim.t-sim.inBandSince>=STABLE_HOLD){sim.settledTime=sim.inBandSince;changed=true;}
+ }else{
+   sim.inBandSince=null;
+   if(sim.settledTime!=null){sim.settledTime=null;changed=true;}
+ }
+ if(simMode==='student'){
+   const prev=ss.timing||{};
+   const next={firstReach:sim.firstReach,settle:sim.settledTime,observedUntil:sim.t,tolerance:TARGET_TOLERANCE,hold:STABLE_HOLD};
+   // Nicht bei jedem Animationsframe speichern; nur bei fachlich relevanten Ereignissen oder in größeren Zeitabständen.
+   const bucket=Math.floor(sim.t);
+   if(changed||bucket!==sim.lastSavedTimingBucket){ss.timing=next;sim.lastSavedTimingBucket=bucket;save();}
+ }
+ updateTimingDisplay(s,ss);
+}
+function resetModel(s){sim={t:0,x:14,theta:0,integral:0,prevE:0,history:[],path:[],u:0,disturb:0,robotX:70,leftPWM:0,rightPWM:0,lastLeft:0,lastRight:0,firstReach:null,inBandSince:null,settledTime:null,lastSavedTimingBucket:-1,timingFrozen:false};updateKpi();updateTimingDisplay(s,state[s.id])}
+function controllerOutputs(s,ss,dt){
+ let p=simProgramOverride||ss.compiled;if(!p){const src=teacherMode?fullSketchFor(s.id):(ss.codeText||studentSketchFor(s.id));p=compileProgramFromCode(s,src);if(simMode==='student')ss.compiled=p}
+ if(!p)return {left:0,right:0,u:0,e:TARGET-(TARGET+sim.x)};
+ const abstand=TARGET+sim.x,e=TARGET-abstand;let korrektur=0;
+ if(p.type==='zp'){
+   if(abstand>p.upper){sim.lastLeft=p.farL;sim.lastRight=p.farR}
+   else if(abstand<p.lower){sim.lastLeft=p.nearL;sim.lastRight=p.nearR}
+   // In der Hysterese werden keine neuen analogWrite-Befehle ausgeführt: letzter Zustand bleibt erhalten.
+   return {left:clampPWM(sim.lastLeft),right:clampPWM(sim.lastRight),u:sim.lastRight-sim.lastLeft,e};
+ }
+ const useDt=p.dt||dt;let pTerm=p.kp*e,iTerm=p.ki*sim.integral,dTerm=0,de=0;
+ if(p.type==='p')korrektur=pTerm;
+ else if(p.type==='i'){sim.integral+=e*useDt;iTerm=p.ki*sim.integral;korrektur=iTerm}
+ else if(p.type==='pi'){sim.integral+=e*useDt;iTerm=p.ki*sim.integral;korrektur=pTerm+iTerm}
+ else if(p.type==='d'){de=(e-sim.prevE)/useDt;dTerm=p.kd*de;korrektur=dTerm}
+ else if(p.type==='pid'){sim.integral+=e*useDt;iTerm=p.ki*sim.integral;de=(e-sim.prevE)/useDt;dTerm=p.kd*de;korrektur=pTerm+iTerm+dTerm}
+ sim.prevE=e;
+ const vars={...p.vars,abstand,sollAbstand:TARGET,regelabweichung:e,korrektur,yP:pTerm,yI:iTerm,yD:dTerm,pAnteil:pTerm,iAnteil:iTerm,dAnteil:dTerm,aenderung:de,grundGeschwindigkeit:p.base};
+ // Motor expressions are part of the program. If a pupil changes them, the simulation changes too.
+ let left=safeExpr(p.leftExpr,vars),right=safeExpr(p.rightExpr,vars);
+ if(!Number.isFinite(left))left=p.base+korrektur;if(!Number.isFinite(right))right=p.base-korrektur;
+ return {left:clampPWM(left),right:clampPWM(right),u:korrektur,e};
+}
+function clampPWM(v){return Math.max(0,Math.min(255,Number(v)||0))}
+function stepModel(s,ss,dt){
+ const o=controllerOutputs(s,ss,dt);sim.leftPWM=o.left;sim.rightPWM=o.right;sim.u=o.u;
+ // Differentialantrieb: exakt aus den beiden programmierten PWM-Werten abgeleitet.
+ const vmax=26; // cm/s bei PWM 255 (didaktisches Modell)
+ const wheelBase=14; // cm
+ const vL=vmax*(sim.leftPWM/255),vR=vmax*(sim.rightPWM/255);
+ const v=(vL+vR)/2;
+ const omega=(vL-vR)/wheelBase; // Canvas: negatives omega lenkt zur oben liegenden Wand
+ sim.theta+=omega*dt;
+ sim.theta=Math.max(-1.15,Math.min(1.15,sim.theta));
+ sim.robotX+=Math.cos(sim.theta)*v*dt*2.0;
+ sim.x+=Math.sin(sim.theta)*v*dt;
+ // leichte reale Störung, aber keine versteckte automatische Lenkung
+ if(sim.disturb>0){sim.x+=0.03*sim.disturb;sim.disturb*=.94}
+ sim.x=Math.max(-14,Math.min(28,sim.x));
+ sim.t+=dt;if(sim.robotX>690)sim.robotX=70;
+ trackTiming(s,ss);
+ if(sim.history.length===0||sim.t-sim.history[sim.history.length-1].t>.08){sim.history.push({t:sim.t,d:TARGET+sim.x,u:sim.u,e:o.e,left:sim.leftPWM,right:sim.rightPWM});if(sim.history.length>260)sim.history.shift()}
+ sim.path.push({x:sim.robotX,offset:sim.x});if(sim.path.length>650)sim.path.shift();
+ updateKpi()
+}
+function updateKpi(){const d=document.getElementById('kpiDist');if(!d)return;d.textContent=(TARGET+sim.x).toFixed(1)+' cm';document.getElementById('kpiErr').textContent=(-sim.x).toFixed(1)+' cm';document.getElementById('kpiU').textContent=sim.u.toFixed(2);const l=document.getElementById('kpiLeft'),r=document.getElementById('kpiRight');if(l){l.textContent=Math.round(sim.leftPWM);l.className=sim.leftPWM<1?'stopped':'running'}if(r){r.textContent=Math.round(sim.rightPWM);r.className=sim.rightPWM<1?'stopped':'running'}document.getElementById('serialConsole').textContent=`Serieller Monitor [${simMode==='reference'?'Referenz':'eigener Code'}]\nAbstand: ${(TARGET+sim.x).toFixed(1)} cm   e: ${(-sim.x).toFixed(1)} cm\nPWM links: ${Math.round(sim.leftPWM)}   PWM rechts: ${Math.round(sim.rightPWM)}   u: ${sim.u.toFixed(2)}`}
+function wallY(x){return 48+5*Math.sin(x/110)}
+function drawRobot(ctx,c,s){
+ ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#f6fafc';ctx.fillRect(0,0,c.width,c.height);
+ ctx.strokeStyle='#28343e';ctx.lineWidth=7;ctx.beginPath();for(let x=0;x<=c.width;x+=4){let y=wallY(x);x?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();
+ const px=6,ry=wallY(sim.robotX)+(TARGET+sim.x)*px,sy=wallY(sim.robotX)+TARGET*px;
+ ctx.strokeStyle='#d54d4d';ctx.lineWidth=2;ctx.setLineDash([8,7]);ctx.beginPath();for(let x=0;x<=c.width;x+=4){let y=wallY(x)+TARGET*px;x?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#d54d4d';ctx.font='12px Segoe UI';ctx.fillText('Sollabstand 20 cm',16,sy-8);
+ if(sim.path&&sim.path.length>1){ctx.strokeStyle=simMode==='reference'?'#15957f':'#5677b8';ctx.lineWidth=3;ctx.globalAlpha=.72;ctx.beginPath();sim.path.forEach((p,i)=>{const yy=wallY(p.x)+(TARGET+p.offset)*px;if(i===0)ctx.moveTo(p.x,yy);else ctx.lineTo(p.x,yy)});ctx.stroke();ctx.globalAlpha=1;}
+ ctx.save();ctx.translate(sim.robotX,ry);ctx.rotate(sim.theta);ctx.shadowColor='rgba(0,0,0,.18)';ctx.shadowBlur=10;ctx.fillStyle='#1e5f8f';roundRect(ctx,-32,-22,64,44,11,true,false);ctx.shadowBlur=0;
+ // Räder: Helligkeit zeigt die programmierte PWM, bei PWM=0 deutlich grau.
+ const lw=Math.round(sim.leftPWM),rw=Math.round(sim.rightPWM);
+ // Zwei angetriebene Räder: oben = links, unten = rechts (bezogen auf die Fahrtrichtung nach rechts)
+ ctx.fillStyle=lw<1?'#aeb7bf':'#171b1f';ctx.fillRect(-13,-30,26,8);
+ ctx.fillStyle=rw<1?'#aeb7bf':'#171b1f';ctx.fillRect(-13,22,26,8);
+ ctx.fillStyle='#149b87';roundRect(ctx,-18,-36,36,14,5,true,false);ctx.fillStyle='#dff7f3';ctx.beginPath();ctx.arc(-9,-29,5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(9,-29,5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#2e3236';roundRect(ctx,-14,-8,28,20,4,true,false);ctx.fillStyle='#97d26a';ctx.fillRect(-9,-4,18,12);
+ ctx.fillStyle=lw<1?'#9b3b3b':'#176943';ctx.font='700 10px Segoe UI';ctx.fillText('L '+lw,-30,-35);ctx.fillStyle=rw<1?'#9b3b3b':'#176943';ctx.fillText('R '+rw,-30,42);ctx.restore();
+ ctx.strokeStyle='rgba(11,143,135,.65)';ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(sim.robotX,ry-36);ctx.lineTo(sim.robotX,wallY(sim.robotX)+4);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#0b8f87';ctx.font='12px Segoe UI';ctx.fillText('HC-SR04',sim.robotX-26,ry-44)
+}
+function roundRect(ctx,x,y,w,h,r,fill,stroke){if(w<2*r)r=w/2;if(h<2*r)r=h/2;ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();if(fill)ctx.fill();if(stroke)ctx.stroke()}
+function drawChart(ctx,c,s,ss){ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);const m={l:46,r:15,t:16,b:32},W=c.width-m.l-m.r,H=c.height-m.t-m.b;ctx.strokeStyle='#e1e7ed';ctx.lineWidth=1;for(let val=0;val<=45;val+=5){const y=m.t+H-(val/45)*H;ctx.beginPath();ctx.moveTo(m.l,y);ctx.lineTo(m.l+W,y);ctx.stroke();ctx.fillStyle='#6a7788';ctx.font='11px Segoe UI';ctx.fillText(String(val),16,y+4)}ctx.fillText('Abstand [cm]',7,12);const sy=m.t+H-(TARGET/45)*H;ctx.strokeStyle='#d54d4d';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(m.l,sy);ctx.lineTo(m.l+W,sy);ctx.stroke();if(ss.predPoints&&ss.predPoints.length>1){ctx.strokeStyle='#7d8791';ctx.lineWidth=2;ctx.setLineDash([7,5]);ctx.beginPath();ss.predPoints.forEach((p,i)=>{const x=m.l+Math.max(0,Math.min(1,(p.x*c.width-50)/(c.width-70)))*W;const val=45-Math.max(0,Math.min(1,(p.y*c.height-20)/(c.height-50)))*45;const y=m.t+H-(val/45)*H;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();ctx.setLineDash([])}if(sim.history.length>1){const t0=sim.history[0].t,t1=sim.history[sim.history.length-1].t;ctx.strokeStyle='#2f6feb';ctx.lineWidth=2.5;ctx.beginPath();sim.history.forEach((p,i)=>{const x=m.l+(p.t-t0)/Math.max(.01,t1-t0)*W;const y=m.t+H-(Math.max(0,Math.min(45,p.d))/45)*H;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}ctx.fillStyle='#6a7788';ctx.fillText('Zeit →',m.l+W-34,c.height-9);ctx.fillStyle='#7d8791';ctx.fillText('grau gestrichelt: deine Vorhersage',m.l+10,c.height-9)}
+
+// teacher / utility
+const techModal=document.getElementById('techModal');document.getElementById('techHelpBtn').onclick=()=>techModal.classList.add('show');document.getElementById('closeTechHelp').onclick=()=>techModal.classList.remove('show');techModal.onclick=e=>{if(e.target===techModal)techModal.classList.remove('show')};
+const modal=document.getElementById('teacherModal');document.getElementById('teacherBtn').onclick=()=>{if(teacherMode){teacherMode=false;presentationMode=false;render();return}modal.classList.add('show');document.getElementById('teacherPassword').focus()};document.getElementById('cancelTeacher').onclick=()=>modal.classList.remove('show');document.getElementById('loginTeacher').onclick=()=>{const v=document.getElementById('teacherPassword').value;if(v===PASSWORD||v===LEGACY_PASSWORD){teacherMode=true;modal.classList.remove('show');document.getElementById('teacherError').textContent='';render();toast('Lehrkräftebereich geöffnet. Demo-Passwortschutz.')}else document.getElementById('teacherError').textContent='Passwort nicht korrekt.'};document.getElementById('teacherPassword').onkeydown=e=>{if(e.key==='Enter')document.getElementById('loginTeacher').click()};document.getElementById('resetAllBtn').onclick=()=>{if(confirm('Gesamten Lernfortschritt auf diesem Gerät zurücksetzen?')){localStorage.removeItem('nitRegelStateV10');localStorage.removeItem('nwtRegelStateV9');localStorage.removeItem('nwtRegelStateV8');localStorage.removeItem('nwtRegelStateV7');localStorage.removeItem('nwtRegelStateV6');localStorage.removeItem('nwtRegelStateV5');location.reload()}};
+// teacher presentation shortcut: double click mode pill
+ document.getElementById('modePill').ondblclick=()=>{if(teacherMode){presentationMode=!presentationMode;render()}};
+render();
+</script>
+</body>
+</html>
