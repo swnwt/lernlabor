@@ -1,0 +1,156 @@
+{
+  "nwt": {
+    "title": "NwT / NIT",
+    "summary": "Entwickeln, konstruieren, programmieren und technische Systeme verstehen.",
+    "icon": "settings",
+    "grades": {
+      "8": [
+        [
+          "Kran",
+          "Statik, Konstruktion und technische Lösungen.",
+          "construction",
+          false
+        ],
+        [
+          "Reaktionstester",
+          "Sensoren, Arduino und Programmierung.",
+          "timer",
+          false
+        ]
+      ],
+      "9": [
+        [
+          "Seifenblasenmaschine",
+          "Von der Projektidee zur funktionsfähigen Maschine – ein interaktiver Qualifizierungspfad.",
+          "bubbles",
+          true
+        ],
+        [
+          "Fotometer",
+          "Messen, kalibrieren und Messwerte auswerten.",
+          "chart",
+          false
+        ]
+      ],
+      "10": [
+        [
+          "Windenergieanlage",
+          "Energieumwandlung, Kennlinien und Optimierung.",
+          "wind",
+          false
+        ],
+        [
+          "Automatisierung",
+          "Sensoren, Steuerungen und autonomes Fahren.",
+          "bot",
+          false
+        ]
+      ],
+      "basisfach": [
+        [
+          "Regelungstechnik",
+          "Wandfahrt mit Zweipunktregler und P-Regler.",
+          "sliders",
+          false
+        ]
+      ]
+    }
+  },
+  "chemie": {
+    "title": "Chemie",
+    "summary": "Stoffe untersuchen, Reaktionen erklären und Modelle anwenden.",
+    "icon": "flask",
+    "grades": {
+      "8": [
+        [
+          "Stoffe und Reaktionen",
+          "Alltagsstoffe und chemische Vorgänge.",
+          "flask",
+          false
+        ]
+      ],
+      "9": [
+        [
+          "Nachweisreaktionen",
+          "Stoffe mit gezielten Experimenten identifizieren.",
+          "search",
+          false
+        ],
+        [
+          "Molekülbau",
+          "Bindungen und räumlicher Aufbau von Molekülen.",
+          "atom",
+          false
+        ]
+      ],
+      "10": [
+        [
+          "Säuren und Basen",
+          "pH-Wert, Neutralisation und Alltag.",
+          "droplet",
+          false
+        ],
+        [
+          "Organische Stoffklassen",
+          "Eigenschaften organischer Verbindungen.",
+          "molecule",
+          false
+        ]
+      ]
+    }
+  },
+  "biologie": {
+    "title": "Biologie",
+    "summary": "Lebewesen, Lebensräume und biologische Zusammenhänge entdecken.",
+    "icon": "leaf",
+    "grades": {
+      "5-6": [
+        [
+          "Wirbeltiere",
+          "Anpassungen und Vielfalt der Wirbeltiere.",
+          "paw",
+          false
+        ]
+      ],
+      "7-8": [
+        [
+          "Ökosysteme",
+          "Wechselwirkungen und Stoffkreisläufe.",
+          "trees",
+          false
+        ]
+      ],
+      "9-10": [
+        [
+          "Genetik",
+          "Vererbung und Erbinformation.",
+          "dna",
+          false
+        ]
+      ]
+    }
+  },
+  "informatik": {
+    "title": "Informatik",
+    "summary": "Algorithmen entwickeln, Daten verstehen und digitale Systeme gestalten.",
+    "icon": "code",
+    "grades": {
+      "7-8": [
+        [
+          "Algorithmen",
+          "Abläufe, Bedingungen und Schleifen.",
+          "workflow",
+          false
+        ]
+      ],
+      "9-10": [
+        [
+          "Daten und Netzwerke",
+          "Wie Informationen gespeichert und übertragen werden.",
+          "network",
+          false
+        ]
+      ]
+    }
+  }
+}
