@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Qualifizierung Seifenblasenmaschine – NwT 9</title>
+<style>
+
+:root{
+  --bg:#f6f8fa;
+  --surface:#ffffff;
+  --surface-soft:#f9fbfc;
+  --ink:#202830;
+  --muted:#697783;
+  --line:#dde5e9;
+  --line-strong:#cbd6dc;
+  --accent:#256d7b;
+  --accent-2:#3b82f6;
+  --accent-soft:#eaf4f5;
+  --blue-soft:#edf5ff;
+  --ok:#2e7d5b;
+  --ok-soft:#edf8f2;
+  --warn:#9a6519;
+  --warn-soft:#fff8e8;
+  --bad:#b44545;
+  --bad-soft:#fff0f0;
+  --code:#1f242b;
+  --code-2:#171b21;
+  --shadow:0 2px 10px rgba(28,45,54,.045);
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font:15.5px/1.58 Inter,Geist,"SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+}
+button,input,select,textarea{font:inherit}
+button{transition:background .16s,border-color .16s,color .16s,transform .06s}
+button:active:not(:disabled){transform:translateY(1px)}
+.app{display:grid;grid-template-columns:282px minmax(0,1fr);min-height:100vh}
+.sidebar{
+  background:#fff;
+  color:var(--ink);
+  padding:24px 18px 28px;
+  border-right:1px solid var(--line);
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:auto;
+}
+.brandrow{display:flex;align-items:center;gap:11px;padding:0 6px 21px;border-bottom:1px solid var(--line)}
+.brandmark{
+  width:40px;height:40px;border-radius:11px;background:var(--accent-soft);color:var(--accent);
+  display:grid;place-items:center;flex:none;border:1px solid #d5e8ea;
+}
+.brandmark svg{width:25px;height:25px;display:block}
+.brand{font-weight:760;font-size:16px;line-height:1.2;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.panel{margin-top:19px;padding:0 6px;background:transparent;border:0;border-radius:0}
+.panel h3,.navlabel{
+  font-size:11px;text-transform:uppercase;letter-spacing:.11em;margin:0 0 9px;color:#83919b;font-weight:750
+}
+.roleBtns{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;background:#f0f4f5;border-radius:10px}
+.sidebar button{
+  border:1px solid transparent;background:transparent;color:#45545e;border-radius:8px;padding:8px 9px;cursor:pointer;font-weight:620
+}
+.roleBtns button.active{background:#fff;color:var(--accent);border-color:var(--line);box-shadow:0 1px 3px rgba(22,43,52,.06)}
+.progressrow{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#46545e;font-size:13px}
+.progresspct{color:var(--accent);font-weight:750}
+.progressbar{height:6px;background:#e7edef;border-radius:999px;overflow:hidden;margin-top:9px}
+.progressbar>div{height:100%;background:var(--accent);width:0;border-radius:999px}
+.unitnav{margin-top:20px;padding:0 4px;display:grid;gap:2px;position:relative}
+.unitnav:before{content:"";position:absolute;left:17px;top:18px;bottom:18px;width:1px;background:#dce5e8}
+.unitnav button{
+  position:relative;display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;gap:9px;text-align:left;width:100%;
+  min-height:45px;padding:6px 7px;border-radius:10px;background:transparent;color:#4a5963;font-size:13px;line-height:1.28;z-index:1
+}
+.unitnav button:hover:not(:disabled){background:#f5f9fa;color:#21323a}
+.unitnav .num{
+  width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid #cbd7dc;
+  color:#65757e;font-size:11px;font-weight:750;z-index:2
+}
+.unitnav button.done .num{background:var(--ok);border-color:var(--ok);color:#fff}
+.unitnav button.done{color:#314b42}
+.unitnav button.locked{opacity:.46;cursor:not-allowed}
+.unitnav button:not(.locked):focus-visible{outline:2px solid #9bc2ca;outline-offset:2px}
+.main{padding:34px 42px 84px;max-width:1240px;width:100%;margin:0 auto}
+.topbar{display:flex;justify-content:space-between;gap:30px;align-items:flex-start;margin:0 0 22px}
+.crumb{font-size:12.5px;color:#7b8993;margin-bottom:3px}
+.crumb a{color:var(--accent);text-decoration:none}
+h1{font-size:28px;line-height:1.2;letter-spacing:-.025em;margin:5px 0 8px;font-weight:760;color:#1f2930}
+.lead{color:#5f6f79;max-width:830px;font-size:15px}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;background:#fff;border:1px solid var(--line);
+  color:#52636d;font-weight:680;font-size:11.5px;white-space:nowrap;box-shadow:var(--shadow)
+}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 21px;
+  box-shadow:var(--shadow);margin-bottom:16px
+}
+.card h2{margin:0 0 7px;font-size:18px;letter-spacing:-.01em;color:#25313a}
+.card h3{margin:0 0 6px;font-size:16px;color:#2d3941}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:13px}.col6{grid-column:span 6}.col4{grid-column:span 4}.col8{grid-column:span 8}.col12{grid-column:span 12}
+.unitcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:12px}
+.unitcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;position:relative;box-shadow:none}
+.unitcard:hover:not(.locked){border-color:#bfd2d7;background:#fcfefe}
+.unitcard.locked{opacity:.56;background:#fbfcfc}
+.unitcard .status{font-size:11px;color:#7a8992;margin-bottom:7px;text-transform:uppercase;letter-spacing:.07em;font-weight:700}
+.unitcard h3{margin:0 0 6px;font-size:15.5px;line-height:1.35}.unitcard p{color:#677680;min-height:44px;margin:6px 0 11px}
+.unitcard button,.primary,.secondary{border-radius:8px;padding:9px 12px;cursor:pointer;font-weight:680;font-size:13.5px}
+.primary{border:1px solid var(--accent);background:var(--accent);color:#fff}
+.primary:hover:not(:disabled){background:#205f6c;border-color:#205f6c}
+.secondary{border:1px solid var(--line-strong);background:#fff;color:#3e4f59}
+.secondary:hover:not(:disabled){background:#f7fafb;border-color:#b9c9cf}
+.secondary:disabled,.primary:disabled{opacity:.43;cursor:not-allowed}
+.meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.meta span{font-size:11.5px;background:#f4f7f8;border:1px solid #e5ecef;padding:4px 7px;border-radius:6px;color:#61717b}
+.step{
+  border:1px solid var(--line);border-left:3px solid #c7d5da;padding:18px 20px;margin:14px 0;background:#fff;border-radius:12px;box-shadow:var(--shadow)
+}
+.step.complete{border-left-color:var(--ok);background:#fbfefc}
+.step h3{display:flex;align-items:center;gap:9px;margin:0 0 10px;font-size:15.5px;color:#2b3840}
+.stepno{width:25px;height:25px;border-radius:7px;display:grid;place-items:center;background:#eff4f5;color:#56707a;font-size:11px;font-weight:750;flex:none}
+.step.complete .stepno{background:#e4f3ea;color:#24684d}
+.hint{border:1px solid #d6e2e6;background:#f8fbfc;border-radius:9px;padding:10px 12px;margin-top:10px}
+.hint summary{cursor:pointer;font-weight:670;color:#445862}
+.feedback{margin-top:10px;padding:10px 12px;border-radius:9px;display:none;border:1px solid transparent}
+.feedback.show{display:block}.feedback.ok{background:var(--ok-soft);color:#256246;border-color:#cce7d8}.feedback.bad{background:var(--bad-soft);color:#903a3a;border-color:#f0caca}.feedback.info{background:var(--blue-soft);color:#315f9a;border-color:#d3e4fb}
+.question{padding:12px 13px;border:1px solid #e0e7ea;border-radius:9px;margin:10px 0;background:#fbfcfd}.question label{display:block;margin:7px 0}
+.input,textarea,select{width:100%;border:1px solid #cdd8dd;border-radius:8px;padding:9px 10px;background:#fff;color:#26343c}
+.input:focus,textarea:focus,select:focus{outline:2px solid #cce3e7;outline-offset:1px;border-color:#8db8c1}
+textarea{min-height:92px;resize:vertical}
+.codewrap{display:grid;grid-template-columns:50px 1fr;border:1px solid #38414a;border-radius:9px;overflow:hidden;background:var(--code);color:#edf2f7;box-shadow:0 2px 8px rgba(25,33,40,.08)}
+.lines{padding:12px 8px;background:var(--code-2);color:#7c8995;text-align:right;white-space:pre;font:13px/1.55 "SFMono-Regular",Consolas,"Liberation Mono",monospace;user-select:none;border-right:1px solid #303841}
+.code{border:0!important;border-radius:0!important;background:var(--code)!important;color:#eef3f7!important;min-height:310px;padding:12px!important;font:13px/1.55 "SFMono-Regular",Consolas,"Liberation Mono",monospace;resize:vertical;outline:none}
+.compiler{font:12.7px/1.48 "SFMono-Regular",Consolas,"Liberation Mono",monospace;background:#171c22;color:#d6e0e7;border:1px solid #303841;border-radius:9px;padding:11px 12px;min-height:48px;margin-top:9px;white-space:pre-wrap}
+.sim{border:1px solid var(--line);border-radius:11px;padding:15px;background:#fbfcfd}.lamp{width:110px;height:110px;border-radius:50%;margin:12px auto;background:#f1f1f1;box-shadow:0 0 0 8px #e4e6eb inset;display:grid;place-items:center;font-weight:800}.lamp.on1{background:#fff0a5;box-shadow:0 0 30px rgba(255,220,60,.45)}.lamp.on2{background:#ffe24f;box-shadow:0 0 50px rgba(255,204,0,.75)}
+.servoGauge{width:180px;height:90px;margin:12px auto;position:relative;border-top-left-radius:180px;border-top-right-radius:180px;background:#edf2f4;overflow:hidden}.needle{position:absolute;width:3px;height:82px;background:#27353d;bottom:0;left:88px;transform-origin:50% 100%;transform:rotate(-90deg)}
+.gearvis{display:flex;gap:16px;align-items:center;justify-content:center;padding:16px}.gear{border:7px dotted #72858f;border-radius:50%;display:grid;place-items:center;font-weight:800}.tower{height:220px;display:flex;align-items:flex-end;justify-content:center;gap:14px}.pole{width:18px;background:#82939b;transform-origin:bottom center;transition:.25s}.bracing{height:150px;width:180px;border:7px solid #82939b;position:relative}.bracing.cross:before,.bracing.cross:after{content:"";position:absolute;left:50%;top:-7px;width:6px;height:162px;background:#82939b;transform-origin:center}.bracing.cross:before{transform:rotate(49deg)}.bracing.cross:after{transform:rotate(-49deg)}
+table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid #e4eaed;padding:8px;text-align:left}th{font-size:11.5px;color:#687983;text-transform:uppercase;letter-spacing:.04em}
+.notice{padding:14px 16px;border-radius:11px;background:var(--warn-soft);color:#72501c;border:1px solid #ead8ad;margin-top:16px}.okbox{padding:13px 15px;border-radius:11px;background:var(--ok-soft);color:#245e45;border:1px solid #c9e5d5}.hidden{display:none!important}
+.footerActions{display:flex;gap:9px;justify-content:flex-end;position:sticky;bottom:12px;padding:10px;background:rgba(246,248,250,.94);backdrop-filter:blur(8px);border:1px solid #e2e9ec;border-radius:10px;box-shadow:0 5px 18px rgba(39,58,67,.06)}
+.teacher{border-color:#c9dfe3;background:#fbfefe}.teacher h2{color:#215f6b}.teacherControls{display:grid;grid-template-columns:1fr 1fr;gap:12px}.small{font-size:12px;color:var(--muted)}
+.focus-card{position:relative;border-left:3px solid var(--accent);background:#fff}.focus-card:before{content:"AKTUELL";position:absolute;right:18px;top:18px;font-size:10px;letter-spacing:.11em;font-weight:800;color:var(--accent);background:var(--accent-soft);border:1px solid #d2e7e9;border-radius:999px;padding:4px 8px}
+.path-intro{display:flex;gap:15px;align-items:flex-start}.path-icon{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);border:1px solid #d4e8ea;flex:none}.path-icon svg{width:25px;height:25px}
+@media(max-width:960px){.app{grid-template-columns:235px minmax(0,1fr)}.main{padding:28px 26px 78px}.sidebar{padding-left:14px;padding-right:14px}}
+@media(max-width:760px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.unitnav{grid-template-columns:repeat(2,minmax(0,1fr))}.unitnav:before{display:none}.main{padding:22px 16px 70px}.topbar{flex-direction:column;gap:10px}.teacherControls{grid-template-columns:1fr}.col6,.col4,.col8{grid-column:span 12}.unitcards{grid-template-columns:1fr}.focus-card:before{position:static;display:inline-flex;margin-bottom:8px}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brandrow">
+    <div class="brandmark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="13" r="5"></circle><circle cx="16.5" cy="7" r="3"></circle><circle cx="18" cy="16.5" r="2"></circle>
+      </svg>
+    </div>
+    <div><div class="brand">Seifenblasenmaschine</div><div class="sub">NwT 9 · Qualifizierung</div></div>
+  </div>
+  <div class="panel">
+    <h3>Ansicht</h3>
+    <div class="roleBtns"><button id="studentBtn" class="active">SuS</button><button id="teacherBtn">Lehrkraft</button></div>
+  </div>
+  <div class="panel">
+    <h3>Fortschritt</h3>
+    <div class="progressrow"><span id="progressTxt">0 von 8 Einheiten</span><span class="progresspct" id="progressPct">0 %</span></div>
+    <div class="progressbar"><div id="progressFill"></div></div>
+  </div>
+  <div id="unitNav" class="unitnav"></div>
+</aside>
+<main class="main">
+  <div id="dashboard"></div>
+  <div id="unitView" class="hidden"></div>
+</main>
+</div>
+<script>
+const units=[
+ {id:1,title:'Technische Systeme & EVA',short:'Teilsysteme, Eingabe–Verarbeitung–Ausgabe, Energie–Stoff–Information',dur:'70–90 min',material:'kein Spezialmaterial',prereq:[],type:'system'},
+ {id:2,title:'Systemanalyse der Seifenblasenmaschine',short:'Projektauftrag zerlegen, 8 Teilsysteme verknüpfen, Lernbedarf ableiten',dur:'60–75 min',material:'Skizze / Notizen',prereq:[1],type:'flows'},
+ {id:3,title:'Arduino – Grundlagen auffrischen',short:'Pins, Taster, PWM, Variablen, if, analogWrite()',dur:'60–90 min',material:'Arduino, LED, Taster',prereq:[2],type:'arduino'},
+ {id:4,title:'Mini-Projekt Schreibtischlampe',short:'Tastergesteuertes Dimmen programmieren und systematisch testen',dur:'75–90 min',material:'Arduino, LED, Taster, Widerstand',prereq:[3],type:'lamp'},
+ {id:5,title:'Servomotor & Gleichstrommotor',short:'Motorarten vergleichen und passend für Dispenser bzw. Luftstrom einsetzen',dur:'75–90 min',material:'SG90, DC-Motor, Arduino',prereq:[4],type:'motors'},
+ {id:6,title:'Leistungsschalter & Getriebe',short:'DC-Motor sicher schalten, Freilaufdiode, Drehzahl/Drehmoment und Übersetzung',dur:'90–120 min',material:'MOSFET, Diode, Motor, Zahnräder',prereq:[5],type:'gear'},
+ {id:7,title:'Statik des Turms',short:'Zug, Druck, Schub, Biegung, Knicken und geeignete Stabilisierung',dur:'90–135 min',material:'Holzstäbe / Testmaterial',prereq:[6],type:'statics'},
+ {id:8,title:'Seifenblasenlösung untersuchen',short:'Mischungen systematisch testen, dokumentieren und optimieren',dur:'60–90 min',material:'Lösungen, Probebecher, Testdispenser',prereq:[7],type:'bubble'}
+];
+let state=JSON.parse(localStorage.getItem('sbmState')||'null')||{role:'student',mode:'teacher',activeUnit:1,done:[],unitData:{}};
+function save(){localStorage.setItem('sbmState',JSON.stringify(state));renderAll()}
+function isDone(id){return state.done.includes(id)}
+function available(u){if(state.role==='teacher')return true;if(state.mode==='teacher')return u.id===Number(state.activeUnit);return u.prereq.every(isDone)}
+function pct(){return Math.round(state.done.length/units.length*100)}
+function renderAll(){renderSidebar();renderDashboard()}
+function renderSidebar(){
+ document.getElementById('studentBtn').classList.toggle('active',state.role==='student');
+ document.getElementById('teacherBtn').classList.toggle('active',state.role==='teacher');
+ document.getElementById('progressTxt').textContent=`${state.done.length} von ${units.length} Einheiten`;
+ document.getElementById('progressFill').style.width=pct()+'%';let pp=document.getElementById('progressPct');if(pp)pp.textContent=pct()+' %';
+ const nav=document.getElementById('unitNav');nav.innerHTML='';
+ units.forEach(u=>{let b=document.createElement('button');b.className=(isDone(u.id)?'done ':'')+(!available(u)?'locked':'');b.disabled=!available(u);b.innerHTML=`<span class="num">${isDone(u.id)?'✓':u.id}</span><span>${u.title}</span>`;b.onclick=()=>openUnit(u.id);nav.appendChild(b)})
+}
+document.getElementById('studentBtn').onclick=()=>{state.role='student';save()};
+document.getElementById('teacherBtn').onclick=()=>{state.role='teacher';save()};
+function renderDashboard(){
+ document.getElementById('unitView').classList.add('hidden');const d=document.getElementById('dashboard');d.classList.remove('hidden');
+ let teacher=''; if(state.role==='teacher') teacher=`<div class="card teacher"><h2>Lehrkraft-Steuerung</h2><p>Im späteren Mehrbenutzerbetrieb wird diese Einstellung serverseitig pro Klasse/Gruppe gespeichert. Im Prototyp wird sie nur lokal im Browser gespeichert.</p><div class="teacherControls"><div><label><b>Auswahlmodus</b></label><select id="modeSel" class="input"><option value="teacher" ${state.mode==='teacher'?'selected':''}>Lehrkraft gibt die Lerneinheit vor</option><option value="self" ${state.mode==='self'?'selected':''}>SuS wählen selbst – in sinnvoller Reihenfolge</option></select></div><div><label><b>Heute freigegebene Einheit</b></label><select id="activeSel" class="input">${units.map(u=>`<option value="${u.id}" ${u.id==state.activeUnit?'selected':''}>${u.id}. ${u.title}</option>`).join('')}</select></div></div><div class="meta"><span>Fortschritt wird gespeichert</span><span>Einzelne Einheit zurücksetzbar</span><span>Pflichtaufgaben vor Abschluss</span></div></div>`;
+ let hero=`<div class="topbar"><div><div class="crumb">NwT 9 · Lernumgebung</div><h1>Qualifizierung Seifenblasenmaschine</h1><div class="lead">Arbeite dich Schritt für Schritt durch den Lernpfad. Wie in der Wandfahrt-Lernumgebung ist jede Einheit gleich aufgebaut: <b>Problem → Vorhersage → Erarbeiten/Testen → Auswerten → Erkenntnis → Checkpoint</b>.</div></div><span class="badge">${state.mode==='teacher'?'Lehrkraft-Freigabe':'Selbstwahlmodus'}</span></div><div class="card path-intro"><div class="path-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18V8"></path><path d="M12 18V4"></path><path d="M19 18v-7"></path><path d="M3 18h18"></path><circle cx="5" cy="8" r="1.6"></circle><circle cx="12" cy="4" r="1.6"></circle><circle cx="19" cy="11" r="1.6"></circle></svg></div><div><h2>Dein Lernpfad</h2><div class="lead">Die Einheiten bauen fachlich aufeinander auf. Pflichtschritte verhindern, dass wichtige Denk- oder Testschritte übersprungen werden.</div></div></div>`;
+ let today=''; if(state.role==='student'&&state.mode==='teacher'){let u=units.find(x=>x.id==state.activeUnit);today=`<div class="card focus-card"><h2>Heute bearbeiten</h2><h3>${u.id}. ${u.title}</h3><p>${u.short}</p><div class="meta"><span>Dauer · ${u.dur}</span><span>Material · ${u.material}</span></div><p><button class="primary" onclick="openUnit(${u.id})">Lerneinheit starten</button></p></div>`}
+ let cards=`<div class="card"><h2>${state.mode==='teacher'&&state.role==='student'?'Übersicht':'Lerneinheit auswählen'}</h2><div class="unitcards">${units.map(u=>{let a=available(u);let st=isDone(u.id)?'abgeschlossen':a?'bereit':'gesperrt';return `<div class="unitcard ${a?'':'locked'}"><div class="status">${isDone(u.id)?'✓ ':''}${st}</div><h3>${u.id}. ${u.title}</h3><p>${u.short}</p><div class="meta"><span>${u.dur}</span></div><p><button class="${a?'primary':'secondary'}" ${a?'':'disabled'} onclick="openUnit(${u.id})">${isDone(u.id)?'Nochmals öffnen':a?'Starten':'Noch gesperrt'}</button></p></div>`}).join('')}</div></div>`;
+ d.innerHTML=hero+teacher+today+cards+`<div class="notice"><b>Projektbezug:</b> Nach Einheit 8 wird der rote Punkt erreicht: Projektauftrag „Auf Knopfdruck innerhalb von 15 s eine Seifenblase ≥ 7 cm erzeugen, die ≥ 8 s schwebt.“</div>`;
+ if(state.role==='teacher'){document.getElementById('modeSel').onchange=e=>{state.mode=e.target.value;save()};document.getElementById('activeSel').onchange=e=>{state.activeUnit=Number(e.target.value);save()}}
+}
+function data(id){state.unitData[id]=state.unitData[id]||{};return state.unitData[id]}
+function openUnit(id){let u=units.find(x=>x.id===id);if(!available(u))return;document.getElementById('dashboard').classList.add('hidden');let v=document.getElementById('unitView');v.classList.remove('hidden');v.innerHTML=unitHtml(u);bindUnit(u);window.scrollTo(0,0)}
+function commonTop(u,problem,goals){return `<div class="topbar"><div><div class="crumb"><a href="#" onclick="renderDashboard();return false">Qualifizierung</a> › Einheit ${u.id}</div><h1>${u.title}</h1><div class="lead">${u.short}</div><div class="meta"><span>Dauer · ${u.dur}</span><span>Material · ${u.material}</span></div></div><span class="badge">Einheit ${u.id}/8</span></div><div class="step"><h3><span class="stepno">1</span>Problem & Projektbezug</h3><p>${problem}</p></div><div class="step"><h3><span class="stepno">2</span>Das sollst du danach können</h3><p>${goals}</p></div>`}
+function predBlock(prompt){return `<div class="step"><h3><span class="stepno">3</span>Vorhersage – erst denken, dann testen</h3><p>${prompt}</p><textarea id="prediction" placeholder="Deine Vorhersage …"></textarea><div class="small">Diese Eingabe ist Pflicht. Sie wird nicht benotet.</div></div>`}
+function finishBlock(){return `<div class="step"><h3><span class="stepno">8</span>Erkenntnis sichern</h3><textarea id="insight" placeholder="Formuliere in 1–3 Sätzen die wichtigste Erkenntnis dieser Einheit."></textarea></div><div class="step"><h3><span class="stepno">9</span>Checkpoint</h3><div id="checkpoint"></div><div id="cpFeedback" class="feedback"></div></div><div class="footerActions"><button class="secondary" id="resetUnit">Einheit zurücksetzen</button><button class="primary" id="finishUnit" disabled>Einheit abschließen</button></div>`}
+function unitHtml(u){let h='';
+ if(u.type==='system') h=commonTop(u,'Eine Waschmaschine, ein Fahrrad und eine Seifenblasenmaschine sehen völlig unterschiedlich aus. Trotzdem lassen sie sich mit demselben Denkwerkzeug analysieren: Welche Eingaben gibt es, was wird verarbeitet und welche Ausgaben entstehen?','… ein technisches System in Teilsysteme zerlegen, EVA anwenden und Energie-, Stoff- und Informationsströme unterscheiden.')+predBlock('Welche drei Arten von „Strömen“ erwartest du in einer Seifenblasenmaschine? Nenne jeweils ein mögliches Beispiel.')+`<div class="step"><h3><span class="stepno">4</span>Kurzinfo</h3><p><b>EVA:</b> Eingabe → Verarbeitung → Ausgabe. Zwischen Teilsystemen können <b>Energie</b>, <b>Stoffe</b> und <b>Informationen</b> übertragen werden.</p><div class="grid"><div class="col4 question"><b>Energie</b><br>z. B. elektrische Energie vom Akku zum Motor</div><div class="col4 question"><b>Stoff</b><br>z. B. Seifenlösung am Dispenser</div><div class="col4 question"><b>Information</b><br>z. B. Tastendruck → Arduino → Motorsignal</div></div></div><div class="step"><h3><span class="stepno">5</span>Bearbeiten</h3><p>Ordne die vier Beispiele richtig zu.</p>${classifyRows([['Taster → Arduino','Information'],['Akku → Motor','Energie'],['Seifenlösung → Ring','Stoff'],['Arduino → MOSFET','Information']])}<button class="secondary" id="checkMain">Prüfen</button><div id="mainFeedback" class="feedback"></div></div><div class="step"><h3><span class="stepno">6</span>Vergleich & Auswertung</h3><p>Übertrage EVA auf die SBM: Was ist die zentrale Eingabe, Verarbeitung und Ausgabe?</p><textarea id="analysis"></textarea></div><div class="step"><h3><span class="stepno">7</span>Kurz nachgedacht</h3><div class="question">Warum reicht es nicht, nur einzelne Bauteile zu kennen?<label><input type="radio" name="quick" value="a"> Weil technische Systeme möglichst viele Bauteile brauchen.</label><label><input type="radio" name="quick" value="b"> Weil die Funktion erst durch das Zusammenwirken und die Ströme zwischen Teilsystemen entsteht.</label></div><div id="quickFeedback" class="feedback"></div></div>`+finishBlock();
+ if(u.type==='flows') h=commonTop(u,'Der Projektauftrag nennt nur das Ergebnis. Damit daraus eine funktionierende Maschine wird, musst du das Gesamtsystem in lösbare Teilprobleme zerlegen.','… die 8 wesentlichen Teilsysteme der SBM benennen, Beziehungen/Ströme einzeichnen und daraus den eigenen Qualifizierungsbedarf ableiten.')+predBlock('Welche drei Teilsysteme sind deiner Meinung nach besonders kritisch dafür, dass die Blase innerhalb von 15 s entsteht und anschließend lange schwebt? Begründe kurz.')+`<div class="step"><h3><span class="stepno">4</span>Systemlandkarte</h3><p>Die Materialvorgaben führen zu diesen typischen Teilsystemen:</p><div class="meta"><span>Stromversorgung</span><span>Arduino</span><span>Leistungsschalter</span><span>DC-Motor</span><span>Getriebe</span><span>Luftschraube</span><span>Dispenser + Servo</span><span>Behälter / Lösung</span><span>Tragstruktur</span></div><p class="small">Je nach konstruktiver Lösung können einzelne Teilsysteme zusammengefasst werden.</p></div><div class="step"><h3><span class="stepno">5</span>Ströme zuordnen</h3>${classifyRows([['Taster → Arduino','Information'],['Arduino → Leistungsschalter','Information'],['Akku → Motor','Energie'],['Luftschraube → Luftstrom','Stoff'],['Seifenlösung → Dispenser','Stoff']])}<button class="secondary" id="checkMain">Prüfen</button><div id="mainFeedback" class="feedback"></div></div><div class="step"><h3><span class="stepno">6</span>Lernpfad ableiten</h3><p>Welche Qualifizierung brauchst du für diese Teilsysteme?</p><table><tr><th>Teilsystem</th><th>Qualifizierung</th></tr><tr><td>Arduino + Taster</td><td>Programmierung, if, Eingänge</td></tr><tr><td>DC-Motor</td><td>Leistungsschalter, externe Versorgung</td></tr><tr><td>Getriebe</td><td>Übersetzung, Drehzahl, Drehmoment</td></tr><tr><td>Turm</td><td>Statik</td></tr><tr><td>Seifenlösung</td><td>systematisches Experimentieren/Optimieren</td></tr></table></div><div class="step"><h3><span class="stepno">7</span>Auswertung</h3><textarea id="analysis" placeholder="Welches Teilsystem erscheint dir aktuell am schwierigsten – und warum?"></textarea></div>`+finishBlock();
+ if(u.type==='arduino') h=commonTop(u,'Die Seifenblasenmaschine soll auf Knopfdruck starten. Der Arduino muss also Eingaben lesen, Entscheidungen treffen und Ausgänge ansteuern.','… wichtige Arduino-Befehle erklären, einen Taster mit INPUT_PULLUP auslesen, PWM von digitalem Ein/Aus unterscheiden und einfache if-Abfragen ergänzen.')+predBlock('Was liest digitalRead() bei einem INPUT_PULLUP-Taster aus, wenn der Taster gedrückt wird? Begründe deine Vermutung.')+`<div class="step"><h3><span class="stepno">4</span>Wiederholung</h3>${classifyRows([['digitalRead(Pin)','Eingang lesen'],['digitalWrite(Pin, HIGH)','digital EIN'],['analogWrite(Pin, 127)','PWM ca. 50 %'],['pinMode(Pin, INPUT_PULLUP)','Eingang mit internem Pull-up']],[['Eingang lesen','digital EIN','PWM ca. 50 %','Eingang mit internem Pull-up']])}<button class="secondary" id="checkMain">Prüfen</button><div id="mainFeedback" class="feedback"></div></div><div class="step"><h3><span class="stepno">5</span>Programmieren</h3><p>Ergänze/ändere den Sketch so, dass eine LED nur leuchtet, wenn der Taster gedrückt ist.</p>${codeEditor(`int taster = 8;\nint led = 11;\n\nvoid setup() {\n  pinMode(taster, INPUT_PULLUP);\n  pinMode(led, OUTPUT);\n}\n\nvoid loop() {\n  int zustand = digitalRead(taster);\n  if (zustand == 0) {\n    analogWrite(led, 255);\n  } else {\n    analogWrite(led, 0);\n  }\n}`)}<button class="primary" id="compileBtn">Compilieren</button><div id="compiler" class="compiler">Noch nicht compiliert.</div></div><div class="step"><h3><span class="stepno">6</span>Simulation</h3><div class="sim"><button class="secondary" id="simButton">Taster drücken</button><div id="simLamp" class="lamp">LED</div><div class="small">Die Simulation wird erst nach erfolgreichem Compilieren aktiviert.</div></div></div><div class="step"><h3><span class="stepno">7</span>Auswertung</h3><textarea id="analysis" placeholder="Erkläre, warum der gedrückte INPUT_PULLUP-Taster den Wert 0/LOW liefert."></textarea></div>`+finishBlock();
+ if(u.type==='lamp') h=commonTop(u,'Eine kleine Leselampe soll durch wiederholtes Drücken zwischen AUS → HELL → SEHR HELL → AUS wechseln. Genau dieses Muster brauchst du später auch für Zustände und Abläufe in der SBM.','… Zustände in einer Variablen speichern, Tasterereignisse mit if verarbeiten, PWM nutzen und einen Ablauf systematisch testen.')+predBlock('Was passiert vermutlich, wenn bei gedrücktem Taster in jedem loop-Durchlauf die Helligkeit erhöht wird und keine Entprell-/Wartezeit vorhanden ist?')+`<div class="step"><h3><span class="stepno">4</span>Teilfunktionen</h3><div class="meta"><span>Taster lesen</span><span>Helligkeitsstufe speichern</span><span>Stufe erhöhen</span><span>PWM ausgeben</span><span>nach Stufe 2 auf 0 zurücksetzen</span></div></div><div class="step"><h3><span class="stepno">5</span>Programmieren</h3>${codeEditor(`int helligkeit = 0;\nint taster = 8;\n\nvoid setup() {\n  pinMode(taster, INPUT_PULLUP);\n}\n\nvoid loop() {\n  int zustand = digitalRead(taster);\n  if (zustand == 0) {\n    helligkeit = helligkeit + 127;\n    delay(250);\n  }\n  if (helligkeit > 254) {\n    helligkeit = 0;\n  }\n  analogWrite(11, helligkeit);\n}`)}<button class="primary" id="compileBtn">Compilieren</button><div id="compiler" class="compiler">Noch nicht compiliert.</div><details class="hint"><summary>Hilfe 1 – Teilfunktionen</summary>Prüfe nacheinander: Taster einlesen → Variable ändern → PWM ausgeben → Rücksprung auf AUS.</details><details class="hint"><summary>Hilfe 2 – Taster</summary>Bei INPUT_PULLUP gilt meist: gedrückt = LOW = 0.</details></div><div class="step"><h3><span class="stepno">6</span>Simulation des eigenen Codes</h3><div class="sim"><button class="secondary" id="simButton">Taster drücken</button><div id="simLamp" class="lamp">AUS</div><p><button class="secondary" id="refBtn">Referenzverhalten anzeigen</button></p><div id="refText" class="feedback info">Referenz: AUS → HELL → SEHR HELL → AUS. Wenn dein Verhalten abweicht, passe deinen Code an.</div></div></div><div class="step"><h3><span class="stepno">7</span>Auswertung</h3><textarea id="analysis" placeholder="Welche Rolle übernimmt die Variable helligkeit? Warum ist sie für einen Zustandswechsel nötig?"></textarea></div>`+finishBlock();
+ if(u.type==='motors') h=commonTop(u,'Der Dispenser muss gezielt in eine Position gebracht werden; die Luftschraube dagegen soll dauerhaft rotieren. Dafür eignen sich unterschiedliche Motorarten.','… Servo und DC-Motor anhand ihrer Funktion unterscheiden, den Servo korrekt ansteuern und für jedes Teilsystem der SBM den passenden Motor begründen.')+predBlock('Welcher Motor eignet sich besser für den Dispenser und welcher für die Luftschraube? Begründe ohne nachzuschlagen.')+`<div class="step"><h3><span class="stepno">4</span>Kurzinfo</h3><div class="grid"><div class="col6 question"><b>Servo</b><br>gezielte Winkelposition; interne Positionsregelung; Steuersignal an einem Digitalpin.</div><div class="col6 question"><b>DC-Motor</b><br>kontinuierliche Rotation; Drehzahl über Versorgung/PWM; für höhere Leistung externer Schalter nötig.</div></div><div class="notice">Beim UNO belegt die Servo-Library Timer 1; dadurch steht <code>analogWrite()</code> an Pins 9 und 10 nicht gleichzeitig zur Verfügung.</div></div><div class="step"><h3><span class="stepno">5</span>Servo testen</h3><label>Winkel: <b id="angleOut">90°</b></label><input id="servoSlider" type="range" min="0" max="180" value="90"><div class="servoGauge"><div id="needle" class="needle"></div></div></div><div class="step"><h3><span class="stepno">6</span>Vergleichen</h3>${classifyRows([['Dispenser eintauchen/ausheben','Servo'],['Luftschraube antreiben','DC-Motor'],['gezielte Position 0°/90°','Servo'],['dauerhaft hohe Drehzahl','DC-Motor']],[['Servo','DC-Motor']])}<button class="secondary" id="checkMain">Prüfen</button><div id="mainFeedback" class="feedback"></div></div><div class="step"><h3><span class="stepno">7</span>Auswertung</h3><textarea id="analysis" placeholder="Warum wäre ein normaler 180°-Servo als Antrieb der Luftschraube ungeeignet?"></textarea></div>`+finishBlock();
+ if(u.type==='gear') h=commonTop(u,'Ein DC-Motor kann die Luftschraube antreiben – aber nicht direkt über einen Arduino-Pin. Außerdem passt seine Drehzahl nicht automatisch zur benötigten Luftströmung.','… einen DC-Motor mit externem Leistungspfad sicher ansteuern, die Freilaufdiode begründen und Übersetzungsverhältnisse für Drehzahl/Drehmoment anwenden.')+predBlock('Was ist gefährlich daran, einen Motor direkt an einen Arduino-I/O-Pin zu hängen? Und was verändert ein Getriebe?')+`<div class="step"><h3><span class="stepno">4</span>Sichere Motoransteuerung</h3><p><b>Prinzip:</b> Arduino-Pin liefert nur das Steuersignal. Die Motorenergie kommt aus einer externen Versorgung über einen geeigneten MOSFET. Eine Freilaufdiode schützt vor Spannungsspitzen des Motors. Alle Massen (GND) müssen verbunden sein.</p><div class="okbox">Arduino UNO: empfohlener I/O-Strom ca. 20 mA pro Pin – der Motorstrom gehört deshalb nicht durch den I/O-Pin.</div></div><div class="step"><h3><span class="stepno">5</span>Getriebe untersuchen</h3><div class="grid"><div class="col6"><label>Zähne Antrieb z₁</label><input id="z1" class="input" type="number" value="20" min="1"><label>Zähne Abtrieb z₂</label><input id="z2" class="input" type="number" value="50" min="1"><p><button id="calcGear" class="secondary">Berechnen</button></p><div id="gearResult" class="feedback info show"></div></div><div class="col6"><div class="gearvis"><div id="g1" class="gear" style="width:72px;height:72px">20</div><div id="g2" class="gear" style="width:118px;height:118px">50</div></div></div></div></div><div class="step"><h3><span class="stepno">6</span>Vergleich & Anwendung</h3><div class="question">Wenn z₁ = 20 und z₂ = 50 gilt, wird der Abtrieb …<label><input type="radio" name="quick" value="a"> schneller und drehmomentärmer</label><label><input type="radio" name="quick" value="b"> langsamer und drehmomentstärker</label></div><div id="quickFeedback" class="feedback"></div></div><div class="step"><h3><span class="stepno">7</span>Auswertung</h3><textarea id="analysis" placeholder="Wann würdest du bei der SBM ins Schnelle und wann ins Langsame übersetzen?"></textarea></div>`+finishBlock();
+ if(u.type==='statics') h=commonTop(u,'Der Dispenser und die Luftschraube sitzen erhöht. Ein hoher, schlanker Turm darf weder knicken noch sich seitlich verschieben oder stark durchbiegen.','… Zug, Druck, Schub und Biegung erkennen; Knickstabilität von Länge/Querschnitt ableiten; Dreiecke/Kreuzverbände/Scheiben zur Stabilisierung auswählen.')+predBlock('Warum ist ein hoher, dünner Pfosten deutlich knickgefährdeter als ein kurzer, dicker? Welche konstruktive Maßnahme erwartest du als besonders wirksam?')+`<div class="step"><h3><span class="stepno">4</span>Belastungsarten</h3>${classifyRows([['Seil','Zug'],['senkrechte Stütze','Druck'],['oberer Querbalken','Biegung'],['ungekreuztes Rechteck bei Seitenkraft','Schub']],[['Zug','Druck','Biegung','Schub']])}<button class="secondary" id="checkMain">Prüfen</button><div id="mainFeedback" class="feedback"></div></div><div class="step"><h3><span class="stepno">5</span>Knickstabilität untersuchen</h3><label>Stablänge <span id="lenOut">160</span></label><input id="lenSlider" type="range" min="80" max="200" value="160"><label>Querschnitt <span id="thickOut">18</span></label><input id="thickSlider" type="range" min="10" max="34" value="18"><div class="tower"><div id="pole" class="pole" style="height:160px"></div></div><p class="small">Didaktische Visualisierung: länger + dünner ⇒ höhere Knickgefahr.</p></div><div class="step"><h3><span class="stepno">6</span>Seitliche Stabilisierung</h3><p><button id="braceBtn" class="secondary">Kreuzverband ein-/ausblenden</button></p><div id="brace" class="bracing"></div></div><div class="step"><h3><span class="stepno">7</span>Auswertung</h3><textarea id="analysis" placeholder="Formuliere drei konkrete Konstruktionsregeln für den Turm deiner Seifenblasenmaschine."></textarea></div>`+finishBlock();
+ if(u.type==='bubble') h=commonTop(u,'Eine dickere/stabilere Seifenhaut kann größere Blasen ermöglichen – zusätzliche Masse kann aber die Schwebezeit verkürzen. Deshalb ist die Lösung ein Optimierungsproblem.','… eine Mischung mit genau einer veränderten Größe testen, Messwerte sauber dokumentieren und eine begründete Optimierungsentscheidung treffen.')+predBlock('Welche Eigenschaft würdest du zuerst verändern, wenn deine Blasen zwar groß werden, aber zu schnell zu Boden fallen? Formuliere eine testbare Vermutung.')+`<div class="step"><h3><span class="stepno">4</span>Versuchsplanung</h3><p>Ändere pro Testreihe möglichst <b>nur eine Größe</b>. Lege vorher fest, was du misst: Durchmesser, Entstehungszeit und Schwebezeit.</p><div class="question"><label>Veränderte Größe</label><input id="varName" class="input" placeholder="z. B. Anteil einer Komponente"></div></div><div class="step"><h3><span class="stepno">5</span>Messprotokoll</h3><table><thead><tr><th>Probe</th><th>Änderung</th><th>Ø Blase [cm]</th><th>Entstehung [s]</th><th>Schwebezeit [s]</th></tr></thead><tbody>${[1,2,3,4].map(i=>`<tr><td>${i}</td><td><input class="input bubbleInput"></td><td><input class="input bubbleInput" type="number"></td><td><input class="input bubbleInput" type="number"></td><td><input class="input bubbleInput" type="number"></td></tr>`).join('')}</tbody></table></div><div class="step"><h3><span class="stepno">6</span>Vergleich</h3><p>Bewerte nicht nur „größte Blase“, sondern alle drei Projektkriterien zusammen.</p><div class="okbox">Mindestziel: ≥ 7 cm Durchmesser, Entstehung innerhalb 15 s, Schwebezeit ≥ 8 s.</div></div><div class="step"><h3><span class="stepno">7</span>Auswertung</h3><textarea id="analysis" placeholder="Welche Probe würdest du weiterentwickeln? Begründe anhand deiner Messwerte."></textarea></div>`+finishBlock();
+ return h;
+}
+function classifyRows(rows,opts){opts=opts&&opts[0]?opts[0]:['Energie','Stoff','Information'];return `<div id="classify">${rows.map((r,i)=>`<div class="grid question"><div class="col8"><b>${r[0]}</b></div><div class="col4"><select class="input classSel" data-answer="${r[1]}"><option value="">– auswählen –</option>${opts.map(o=>`<option>${o}</option>`).join('')}</select></div></div>`).join('')}</div>`}
+function codeEditor(code){let n=code.split('\n').length;return `<div class="codewrap"><div id="lineNums" class="lines">${Array.from({length:n},(_,i)=>i+1).join('\n')}</div><textarea id="code" class="code" spellcheck="false">${code.replace(/</g,'&lt;')}</textarea></div>`}
+function updateLines(){let c=document.getElementById('code'),l=document.getElementById('lineNums');if(c&&l)l.textContent=Array.from({length:c.value.split('\n').length},(_,i)=>i+1).join('\n')}
+function lint(code){let errors=[],lines=code.split('\n'),bal=0;lines.forEach((raw,i)=>{let line=raw.replace(/\/\/.*$/,'').trim();for(let ch of line){if(ch==='{')bal++;if(ch==='}')bal--}if(bal<0)errors.push(`Zeile ${i+1}: schließende Klammer ohne passende öffnende Klammer.`);if(line && /^(pinMode|digitalWrite|analogWrite|delay|Serial\.(print|println|begin)|[A-Za-z_]\w*\.write|[A-Za-z_]\w*\.attach)\s*\(/.test(line) && !/[;{}]$/.test(line))errors.push(`Zeile ${i+1}: vermutlich fehlt ein Semikolon.`);if(/\bdigtal(Read|Write)\b|\banalogWrit\b|\bpinmode\b/.test(line))errors.push(`Zeile ${i+1}: unbekannter/fehlerhafter Befehl.`)});if(bal!==0)errors.push(`Klammerfehler: Anzahl { und } stimmt nicht überein.`);if(!/void\s+setup\s*\(/.test(code))errors.push('setup() fehlt.');if(!/void\s+loop\s*\(/.test(code))errors.push('loop() fehlt.');return errors}
+function bindUnit(u){let d=data(u.id);let pred=document.getElementById('prediction'),analysis=document.getElementById('analysis'),insight=document.getElementById('insight');if(pred)pred.value=d.pred||'';if(analysis)analysis.value=d.analysis||'';if(insight)insight.value=d.insight||'';[pred,analysis,insight].forEach(el=>{if(el)el.oninput=()=>{d[el.id==='prediction'?'pred':el.id]=el.value;state.unitData[u.id]=d;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)}});
+ let sels=[...document.querySelectorAll('.classSel')]; if(sels.length){sels.forEach((s,i)=>{if(d['sel'+i])s.value=d['sel'+i];s.onchange=()=>{d['sel'+i]=s.value;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)}});let btn=document.getElementById('checkMain');if(btn)btn.onclick=()=>{let ok=sels.every(s=>s.value===s.dataset.answer),f=document.getElementById('mainFeedback');f.className='feedback show '+(ok?'ok':'bad');f.textContent=ok?'Richtig. Entscheidend ist nicht nur das Bauteil, sondern was zwischen den Teilsystemen übertragen wird.':'Noch nicht ganz. Prüfe besonders, ob hier Energie, Stoff oder Information übertragen wird.';d.mainOk=ok;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)}}
+ let quick=[...document.querySelectorAll('input[name=quick]')];quick.forEach(q=>q.onchange=()=>{let correct=(u.type==='gear'||u.type==='system')?'b':'b',f=document.getElementById('quickFeedback');let ok=q.value===correct;f.className='feedback show '+(ok?'ok':'bad');f.textContent=ok?'Richtig – und genau diese Begründung solltest du in deine technische Entscheidung übernehmen.':'Noch nicht. Begründe die Antwort aus der Funktion des Systems heraus.';d.quickOk=ok;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)});
+ let code=document.getElementById('code');if(code){if(d.code)code.value=d.code;updateLines();code.oninput=()=>{d.code=code.value;d.compiled=false;document.getElementById('compiler').textContent='Code geändert – erneut compilieren.';updateLines();localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)};document.getElementById('compileBtn').onclick=()=>{let errs=lint(code.value),out=document.getElementById('compiler');if(errs.length){out.textContent='Compilieren fehlgeschlagen:\n'+errs.map(e=>'• '+e).join('\n');d.compiled=false}else{out.textContent='Compilieren erfolgreich. Keine typischen Syntaxfehler im Lerncheck gefunden.';d.compiled=true}localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)}}
+ if(document.getElementById('simButton')){let stage=d.stage||0;const draw=()=>{let lamp=document.getElementById('simLamp');lamp.className='lamp '+(stage===1?'on1':stage===2?'on2':'');lamp.textContent=stage===0?'AUS':stage===1?'HELL':'SEHR HELL'};draw();document.getElementById('simButton').onclick=()=>{if(!d.compiled){alert('Bitte zuerst erfolgreich compilieren.');return}stage=(stage+1)%3;d.stage=stage;d.simUsed=true;draw();localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)}}
+ if(document.getElementById('refBtn'))document.getElementById('refBtn').onclick=()=>document.getElementById('refText').classList.toggle('show');
+ let slider=document.getElementById('servoSlider');if(slider){let set=()=>{document.getElementById('angleOut').textContent=slider.value+'°';document.getElementById('needle').style.transform=`rotate(${Number(slider.value)-90}deg)`;d.servoUsed=true;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)};slider.oninput=set;set()}
+ if(document.getElementById('calcGear')){let calc=()=>{let z1=+document.getElementById('z1').value,z2=+document.getElementById('z2').value,i=z2/z1;document.getElementById('g1').textContent=z1;document.getElementById('g2').textContent=z2;document.getElementById('gearResult').textContent=`i = z₂/z₁ = ${i.toFixed(2)}. ${i>=1?'Abtrieb langsamer, Drehmoment steigt idealisiert.':'Abtrieb schneller, Drehmoment sinkt idealisiert.'}`;d.gearUsed=true;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)};document.getElementById('calcGear').onclick=calc;calc()}
+ let ls=document.getElementById('lenSlider'),ts=document.getElementById('thickSlider');if(ls&&ts){let draw=()=>{let pole=document.getElementById('pole'),len=+ls.value,th=+ts.value;document.getElementById('lenOut').textContent=len;document.getElementById('thickOut').textContent=th;pole.style.height=len+'px';pole.style.width=th+'px';let risk=(len/160)*(18/th);pole.style.transform=`skewX(${Math.max(0,(risk-0.6)*12)}deg)`;d.staticUsed=true;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)};ls.oninput=ts.oninput=draw;draw();document.getElementById('braceBtn').onclick=()=>document.getElementById('brace').classList.toggle('cross')}
+ if(u.type==='bubble'){let v=document.getElementById('varName');if(d.varName)v.value=d.varName;v.oninput=()=>{d.varName=v.value;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)};document.querySelectorAll('.bubbleInput').forEach((el,i)=>{if(d['b'+i])el.value=d['b'+i];el.oninput=()=>{d['b'+i]=el.value;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)}})}
+ let cp=document.getElementById('checkpoint');cp.innerHTML=checkpointFor(u);cp.querySelectorAll('input').forEach(r=>r.onchange=()=>{let ok=r.value==='correct',f=document.getElementById('cpFeedback');f.className='feedback show '+(ok?'ok':'bad');f.textContent=ok?checkpointExplain(u):'Noch nicht. Lies deine Erkenntnis und den Projektbezug noch einmal.';d.cpOk=ok;localStorage.setItem('sbmState',JSON.stringify(state));checkFinish(u)});
+ document.getElementById('resetUnit').onclick=()=>{if(confirm('Nur diese Lerneinheit zurücksetzen?')){delete state.unitData[u.id];state.done=state.done.filter(x=>x!==u.id);save();openUnit(u.id)}};document.getElementById('finishUnit').onclick=()=>{if(!state.done.includes(u.id))state.done.push(u.id);state.activeUnit=Math.min(8,u.id+1);save();renderDashboard()};checkFinish(u)
+}
+function checkpointFor(u){let q={system:['Welche Aussage beschreibt ein technisches System am besten?','Es besteht nur aus Hardware.','Seine Funktion entsteht durch zusammenwirkende Teilsysteme und Ströme.'],flows:['Warum führt die Systemanalyse zu einem Lernpfad?','Weil jedes Teilsystem andere Fachkenntnisse verlangt.','Weil alle Teilsysteme identisch funktionieren.'],arduino:['Was gilt bei INPUT_PULLUP typischerweise für einen gedrückten Taster?','HIGH','LOW'],lamp:['Wozu dient die Variable helligkeit?','Sie speichert den aktuellen Zustand.','Sie ersetzt den Vorwiderstand.'],motors:['Welcher Motor passt typischerweise zur gezielten Winkelposition?','DC-Motor','Servo'],gear:['Warum braucht der DC-Motor einen Leistungsschalter?','Damit der Motorstrom nicht über den Arduino-I/O-Pin fließt.','Damit der Arduino schneller rechnet.'],statics:['Wie lässt sich Knickstabilität erhöhen?','Länger und dünner bauen.','Kürzer/dicker bauen oder zusätzlich abstützen.'],bubble:['Was macht einen guten Optimierungsversuch aus?','Mehrere Größen gleichzeitig verändern.','Pro Reihe möglichst nur eine Größe systematisch verändern.']}[u.type];let correctIndex={system:1,flows:0,arduino:1,lamp:0,motors:1,gear:0,statics:1,bubble:1}[u.type];return `<div class="question"><b>${q[0]}</b><label><input type="radio" name="cp" value="${correctIndex===0?'correct':'wrong'}"> ${q[1]}</label><label><input type="radio" name="cp" value="${correctIndex===1?'correct':'wrong'}"> ${q[2]}</label></div>`}
+function checkpointExplain(u){return {system:'Genau: Entscheidend sind Funktion, Teilsysteme und deren Wechselwirkungen.',flows:'Genau: Aus den Teilproblemen lassen sich die nötigen Qualifizierungen ableiten.',arduino:'Richtig: Der interne Pull-up hält den Eingang ungedrückt auf HIGH; beim Drücken wird er nach GND gezogen.',lamp:'Richtig: Die Variable hält den Zustand zwischen den loop-Durchläufen fest.',motors:'Richtig: Der Servo wird auf Winkelpositionen gestellt; der DC-Motor eignet sich für kontinuierliche Rotation.',gear:'Richtig: Der Arduino steuert nur – die Motorenergie kommt aus dem externen Leistungspfad.',statics:'Richtig: Knicken wird durch kleine freie Länge, größeren Querschnitt und geeignete Abstützung vermindert.',bubble:'Richtig: Nur so lässt sich die Wirkung einer Änderung sinnvoll zuordnen.'}[u.type]}
+function checkFinish(u){let d=data(u.id),pred=(d.pred||'').trim(),an=(d.analysis||'').trim(),ins=(d.insight||'').trim();let mainNeeded=['system','flows','motors','statics'].includes(u.type);let quickNeeded=['system','gear'].includes(u.type);let codeNeeded=['arduino','lamp'].includes(u.type);let extra=true;if(u.type==='motors')extra=!!d.servoUsed;if(u.type==='gear')extra=!!d.gearUsed;if(u.type==='statics')extra=!!d.staticUsed;if(u.type==='bubble')extra=(d.varName||'').trim().length>1;let ok=pred.length>10&&an.length>10&&ins.length>8&&d.cpOk&&(!mainNeeded||d.mainOk)&&(!quickNeeded||d.quickOk)&&(!codeNeeded||d.compiled)&&extra;let b=document.getElementById('finishUnit');if(b)b.disabled=!ok}
+renderAll();
+</script>
+<a href="../" style="position:fixed;bottom:14px;right:14px;background:#176b78;color:white;border-radius:8px;padding:10px 13px;font:600 12px system-ui;text-decoration:none;z-index:9999">← Zur Themenübersicht</a></body>
+</html>
